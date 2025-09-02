@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowUp, Plus } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 
 const ACCENT = "#8C0529";
 
 const HeroSection = () => {
-  // Typing carousel (mismo comportamiento que tenías)
+  // Animación de placeholder
   const [currentText, setCurrentText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
@@ -24,12 +24,12 @@ const HeroSection = () => {
     "Quiero arrendar departamento 1D en Vitacura, amoblado",
   ];
 
-  // Auto-grow del textarea
+  // Auto-ajustar altura del textarea
   const autoGrow = () => {
     const el = areaRef.current;
     if (!el) return;
     el.style.height = "0px";
-    const h = Math.min(160, Math.max(56, el.scrollHeight));
+    const h = Math.min(200, Math.max(100, el.scrollHeight)); // mínimo 100px, máximo 200px
     el.style.height = `${h}px`;
   };
 
@@ -37,7 +37,7 @@ const HeroSection = () => {
     autoGrow();
   }, [value]);
 
-  // Animación del placeholder
+  // Animación de typing del placeholder
   useEffect(() => {
     const currentExample = examples[currentIndex];
 
@@ -73,10 +73,7 @@ const HeroSection = () => {
 
   const onSubmit = () => {
     if (!value.trim()) return;
-    // Aquí puedes disparar tu acción (navigate, open modal, etc.)
     console.log("Query:", value.trim());
-    // reset opcional
-    // setValue("");
   };
 
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
@@ -97,7 +94,7 @@ const HeroSection = () => {
             </h1>
           </div>
 
-          {/* Composer estilo chat */}
+          {/* Cuadro estilo chat */}
           <div className="mx-auto max-w-3xl">
             <div
               className="
@@ -106,24 +103,9 @@ const HeroSection = () => {
                 transition focus-within:border-neutral-300
               "
             >
-              {/* Botón + (izquierda) */}
-              <button
-                type="button"
-                aria-label="Añadir"
-                className="
-                  absolute left-3 top-1/2 -translate-y-1/2
-                  inline-flex items-center justify-center
-                  w-9 h-9 rounded-lg border border-neutral-200 bg-neutral-50
-                  text-neutral-600 hover:bg-neutral-100 active:scale-[0.98] transition
-                "
-              >
-                <Plus className="w-5 h-5" />
-              </button>
-
-              {/* Textarea */}
               <textarea
                 ref={areaRef}
-                rows={2}
+                rows={4}
                 onInput={autoGrow}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -133,23 +115,23 @@ const HeroSection = () => {
                 className="
                   block w-full resize-none
                   bg-transparent
-                  pl-14 pr-14 py-4
-                  text-[16px] md:text-[17px] leading-[1.35]
+                  px-5 pr-14 py-6
+                  text-[16px] md:text-[17px] leading-[1.5]
                   placeholder:text-neutral-400
                   outline-none
                   rounded-2xl
                 "
               />
 
-              {/* Botón enviar (derecha) */}
+              {/* Botón enviar */}
               <button
                 type="button"
                 onClick={onSubmit}
                 aria-label="Enviar consulta"
                 className="
-                  absolute right-3 top-1/2 -translate-y-1/2
+                  absolute right-4 bottom-4
                   inline-flex items-center justify-center
-                  h-10 px-3 rounded-full text-white
+                  h-10 w-10 rounded-full text-white
                   hover:opacity-90 active:scale-[0.99] transition
                 "
                 style={{ backgroundColor: ACCENT }}
@@ -172,3 +154,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
