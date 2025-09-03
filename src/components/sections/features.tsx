@@ -51,8 +51,8 @@ const Features = () => {
 
         {/* Ribbon */}
         <div className="relative">
-          {/* Línea central */}
-          <div className="absolute left-0 right-0 top-9 lg:top-10 h-px bg-neutral-200/70" />
+          {/* Línea central (oculta en móvil) */}
+          <div className="hidden lg:block absolute left-0 right-0 top-9 lg:top-10 h-px bg-neutral-200/70" />
 
           {/* 5 hitos */}
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-6">

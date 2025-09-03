@@ -40,59 +40,62 @@ const Footer = () => {
             </Link>
           </div>
 
-          {/* Columna central: navegación */}
-          <div>
-            <h4 className="text-neutral-900 font-semibold mb-3">Entra</h4>
-            <ul className="space-y-2 text-neutral-600">
-              <li>
-                <Link href="#hero" className="hover:text-neutral-900 transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const el = document.getElementById('hero');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >Home</Link>
-              </li>
-              <li>
-                <Link href="#product" className="hover:text-neutral-900 transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const el = document.getElementById('product');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >Product</Link>
-              </li>
-              <li className="text-neutral-400">Contact</li>
-            </ul>
-          </div>
+          {/* Navegación + Social */}
+          <div className="grid grid-cols-2 gap-6 md:contents">
+            {/* Columna central: navegación */}
+            <div>
+              <h4 className="text-neutral-900 font-semibold mb-3">Entra</h4>
+              <ul className="space-y-2 text-neutral-600">
+                <li>
+                  <Link href="#hero" className="hover:text-neutral-900 transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const el = document.getElementById('hero');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >Home</Link>
+                </li>
+                <li>
+                  <Link href="#product" className="hover:text-neutral-900 transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const el = document.getElementById('product');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >Product</Link>
+                </li>
+                <li className="text-neutral-400">Contact</li>
+              </ul>
+            </div>
 
-          {/* Columna derecha: social */}
-          <div>
-            <h4 className="text-neutral-900 font-semibold mb-3">Síguenos</h4>
-            <ul className="space-y-2 text-neutral-600">
-              <li>
-                <a
-                  href="https://www.instagram.com/broky.ai/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-neutral-900 transition-colors"
-                  aria-label="Instagram de Broky"
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.linkedin.com/company/broky-ai/?viewAsMember=true"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-neutral-900 transition-colors"
-                  aria-label="LinkedIn de Broky"
-                >
-                  LinkedIn
-                </a>
-              </li>
-            </ul>
+            {/* Columna derecha: social */}
+            <div>
+              <h4 className="text-neutral-900 font-semibold mb-3">Síguenos</h4>
+              <ul className="space-y-2 text-neutral-600">
+                <li>
+                  <a
+                    href="https://www.instagram.com/broky.ai/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-neutral-900 transition-colors"
+                    aria-label="Instagram de Broky"
+                  >
+                    Instagram
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/company/broky-ai/?viewAsMember=true"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-neutral-900 transition-colors"
+                    aria-label="LinkedIn de Broky"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         {/* Línea y marca pequeña */}

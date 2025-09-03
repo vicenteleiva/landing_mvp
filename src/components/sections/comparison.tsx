@@ -61,7 +61,7 @@ export const ComparisonSection = () => {
 
         {/* Cabecera de comparación: etiquetas + VS */}
         <div className="mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div className="hidden md:grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-red-200" />
               <span className="inline-flex items-center rounded-full bg-red-50 text-red-800 border border-red-100 px-4 py-2 text-sm font-medium">
@@ -81,8 +81,8 @@ export const ComparisonSection = () => {
             </div>
           </div>
 
-          {/* Resultados headline arriba (sin puntos) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+          {/* Resultados headline arriba (solo desktop) */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
             <h3
               className={[
                 "text-sm md:text-base font-semibold tracking-wide uppercase text-red-700 md:text-left text-center opacity-0",
@@ -102,19 +102,15 @@ export const ComparisonSection = () => {
           </div>
         </div>
 
-        {/* PARES DE BUBBLES (compactas + iconos laterales + animación enfrentada) */}
-        <div className="space-y-3">
+        {/* PARES DE BUBBLES - Desktop (vista original) */}
+        <div className="hidden md:block space-y-3">
           {pairs.map((p, i) => {
             const delay = 120 * i; // cascada
             return (
-              <div
-                key={i}
-                className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 items-stretch"
-              >
+              <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 items-stretch">
                 {/* Columna izquierda (negativa) */}
                 <div className="h-full">
                   <div className="flex items-center justify-between gap-3">
-                    {/* Icono X rojo, acompaña animación */}
                     <span
                       className={[
                         "hidden md:inline-flex shrink-0 items-center justify-center rounded-full border border-red-200 text-red-600 bg-red-50 w-8 h-8 text-sm font-bold opacity-0",
@@ -125,8 +121,6 @@ export const ComparisonSection = () => {
                     >
                       ×
                     </span>
-
-                    {/* Bubble compacta (ancho reducido y altura uniforme) */}
                     <div
                       className={[
                         "flex-1 flex justify-center opacity-0",
@@ -135,13 +129,9 @@ export const ComparisonSection = () => {
                       style={{ animationDelay: startAnim ? `${delay}ms` : "0ms" }}
                     >
                       <div className="w-full max-w-[520px] md:max-w-[480px] lg:max-w-[520px] rounded-2xl bg-red-50/90 border border-red-100 text-red-900 shadow-sm px-4 py-3">
-                        <p className="text-[14px] leading-snug font-medium min-h-[48px] flex items-center">
-                          {p.left}
-                        </p>
+                        <p className="text-[14px] leading-snug font-medium min-h-[48px] flex items-center">{p.left}</p>
                       </div>
                     </div>
-
-                    {/* espacio simétrico para alinear con icono derecho en mobile */}
                     <span className="md:w-8 md:h-8 md:inline-flex hidden" />
                   </div>
                 </div>
@@ -149,35 +139,24 @@ export const ComparisonSection = () => {
                 {/* Columna derecha (positiva) */}
                 <div className="h-full">
                   <div className="flex items-center justify-between gap-3">
-                    {/* espacio simétrico para alinear con icono izquierdo */}
                     <span className="md:w-8 md:h-8 md:inline-flex hidden" />
-
-                    {/* Bubble compacta */}
                     <div
                       className={[
                         "flex-1 flex justify-center opacity-0",
                         startAnim ? "animate-[bubbleRight_420ms_ease-out_forwards]" : "",
                       ].join(" ")}
-                      style={{
-                        animationDelay: startAnim ? `${delay + 60}ms` : "0ms",
-                      }}
+                      style={{ animationDelay: startAnim ? `${delay + 60}ms` : "0ms" }}
                     >
                       <div className="w-full max-w-[520px] md:max-w-[480px] lg:max-w-[520px] rounded-2xl bg-green-50/90 border border-green-100 text-green-900 shadow-sm px-4 py-3">
-                        <p className="text-[14px] leading-snug font-medium min-h-[48px] flex items-center">
-                          {p.right}
-                        </p>
+                        <p className="text-[14px] leading-snug font-medium min-h-[48px] flex items-center">{p.right}</p>
                       </div>
                     </div>
-
-                    {/* Icono check verde, acompaña animación */}
                     <span
                       className={[
                         "hidden md:inline-flex shrink-0 items-center justify-center rounded-full border border-green-200 text-green-600 bg-green-50 w-8 h-8 text-sm font-bold opacity-0",
                         startAnim ? "animate-[iconRight_420ms_ease-out_forwards]" : "",
                       ].join(" ")}
-                      style={{
-                        animationDelay: startAnim ? `${delay + 60}ms` : "0ms",
-                      }}
+                      style={{ animationDelay: startAnim ? `${delay + 60}ms` : "0ms" }}
                       aria-hidden
                     >
                       ✓
@@ -187,6 +166,69 @@ export const ComparisonSection = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* Mobile: agrupar por categoría */}
+        <div className="md:hidden space-y-6">
+          {/* Búsqueda tradicional */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px flex-1 bg-red-200" />
+              <span className="inline-flex items-center rounded-full bg-red-50 text-red-800 border border-red-100 px-4 py-2 text-sm font-medium">Búsqueda tradicional</span>
+              <div className="h-px flex-1 bg-red-200" />
+            </div>
+            <h3
+              className={[
+                "text-sm font-semibold tracking-wide uppercase text-red-700 text-center opacity-0 mb-2",
+                startAnim ? "animate-[headlineLeft_420ms_ease-out_forwards]" : "",
+              ].join(" ")}
+            >
+              Semanas de búsqueda, cansancio e inseguridad
+            </h3>
+            <div className="space-y-3">
+              {pairs.map((p, i) => (
+                <div
+                  key={`m-left-${i}`}
+                  className={["opacity-0", startAnim ? "animate-[bubbleLeft_420ms_ease-out_forwards]" : ""].join(" ")}
+                  style={{ animationDelay: startAnim ? `${i * 120}ms` : "0ms" }}
+                >
+                  <div className="w-full rounded-2xl bg-red-50/90 border border-red-100 text-red-900 shadow-sm px-4 py-3">
+                    <p className="text-[14px] leading-snug font-medium">{p.left}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Con Broky */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px flex-1 bg-green-200" />
+              <span className="inline-flex items-center rounded-full bg-green-50 text-green-800 border border-green-100 px-4 py-2 text-sm font-medium">Con Broky</span>
+              <div className="h-px flex-1 bg-green-200" />
+            </div>
+            <h3
+              className={[
+                "text-sm font-semibold tracking-wide uppercase text-green-700 text-center opacity-0 mb-2",
+                startAnim ? "animate-[headlineRight_420ms_ease-out_forwards]" : "",
+              ].join(" ")}
+            >
+              Minutos para encontrar, resolver y agendar seguro
+            </h3>
+            <div className="space-y-3">
+              {pairs.map((p, i) => (
+                <div
+                  key={`m-right-${i}`}
+                  className={["opacity-0", startAnim ? "animate-[bubbleRight_420ms_ease-out_forwards]" : ""].join(" ")}
+                  style={{ animationDelay: startAnim ? `${i * 120 + 60}ms` : "0ms" }}
+                >
+                  <div className="w-full rounded-2xl bg-green-50/90 border border-green-100 text-green-900 shadow-sm px-4 py-3">
+                    <p className="text-[14px] leading-snug font-medium">{p.right}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* CTA */}

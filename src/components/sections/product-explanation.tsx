@@ -152,22 +152,23 @@ function MiniListingCompact({
       type="button"
       onClick={onClick}
       className={[
-        "w-full text-left bg-white border border-neutral-200 rounded-xl shadow-sm p-2 transition-all duration-200",
+        // Reduce padding on mobile to free up vertical space
+        "w-full text-left bg-white border border-neutral-200 rounded-xl shadow-sm p-1.5 md:p-2 transition-all duration-200",
         selected ? "ring-2 ring-[rgba(140,5,41,0.25)]" : "ring-0",
         "opacity-0 translate-y-1 animate-[in_200ms_ease-out_forwards]",
       ].join(" ")}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-lg bg-neutral-200 shrink-0" />
+      <div className="flex items-center gap-1.5 md:gap-2">
+        <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-neutral-200 shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[11px] font-medium text-neutral-900 truncate">{title}</p>
-            <p className="text-[10.5px] font-semibold shrink-0" style={{ color: ACCENT }}>
+            <p className="text-[10px] md:text-[11px] font-medium text-neutral-900 truncate">{title}</p>
+            <p className="text-[9.5px] md:text-[10.5px] font-semibold shrink-0" style={{ color: ACCENT }}>
               {price}
             </p>
           </div>
-          <p className="text-[10px] text-neutral-500 truncate">{subtitle}</p>
+          <p className="text-[9px] md:text-[10px] text-neutral-500 truncate">{subtitle}</p>
         </div>
       </div>
 
@@ -423,8 +424,9 @@ const ProductExplanation = () => {
         ];
 
         return (
-          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px]`}>
-            <ChatBubble role="user" incoming delay={0} size="mini">
+          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px] gap-0 md:gap-2`}>
+            {/* Compact bubbles on mobile to avoid clipping during animation */}
+            <ChatBubble role="user" incoming delay={0} size="mini" extraClass="scale-[0.88] md:scale-100 leading-tight md:leading-relaxed">
               Departamento 2D en Providencia, $650.000 máx
             </ChatBubble>
 
@@ -433,7 +435,7 @@ const ProductExplanation = () => {
               incoming
               delay={120}
               size="mini"
-              extraClass="animate-[slideInLeft_320ms_ease-out_forwards] opacity-0"
+              extraClass="animate-[slideInLeft_320ms_ease-out_forwards] opacity-0 scale-[0.88] md:scale-100 leading-tight md:leading-relaxed"
             >
               Estas son 3 opciones que calzan con tu búsqueda:
             </ChatBubble>
@@ -455,15 +457,15 @@ const ProductExplanation = () => {
                     <div
                       className={[
                         "overflow-hidden transition-all duration-350",
-                        selected ? "max-h-36 opacity-100" : "max-h-0 opacity-0",
+                        selected ? "max-h-32 md:max-h-36 opacity-100" : "max-h-0 opacity-0",
                       ].join(" ")}
                     >
-                      <div className="pt-2 px-2">
-                        <p className="text-[10.5px] text-neutral-600 mb-2">{it.desc}</p>
-                        <div className="flex flex-wrap gap-2">
-                          <PhotoPlaceholder className="w-[80px] h-[56px]" />
-                          <PhotoPlaceholder className="w-[80px] h-[56px]" />
-                          <PhotoPlaceholder className="w-[80px] h-[56px]" />
+                      <div className="pt-1.5 md:pt-2 px-2">
+                        <p className="text-[10px] md:text-[10.5px] text-neutral-600 mb-1.5 md:mb-2">{it.desc}</p>
+                        <div className="flex flex-wrap gap-1.5 md:gap-2">
+                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
                         </div>
                       </div>
                     </div>
@@ -530,16 +532,23 @@ const ProductExplanation = () => {
       case "calendar":
         const CELL = 14; // px
         return (
-          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px]`}>
+          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px] gap-0 md:gap-2`}>
             {/* Primer mensaje + calendario */}
-            <ChatBubble key={`calmsg-${calMsgKey}`} role="broky" incoming delay={0} size="mini">
+            <ChatBubble
+              key={`calmsg-${calMsgKey}`}
+              role="broky"
+              incoming
+              delay={0}
+              size="mini"
+              extraClass="origin-top-left scale-[0.7] md:scale-100 leading-tight md:leading-relaxed"
+            >
               <div className="text-left">
-                <p className="mb-1.5">
+                <p className="mb-0.5 md:mb-1.5">
                   Estos son los horarios disponibles para visitar. Elige el que te acomode:
                 </p>
 
-                <div className="mx-auto inline-block rounded-xl border border-neutral-200 p-2 bg-white shadow-sm">
-                  <div className="grid grid-cols-7 gap-[2px] text-[9px] text-neutral-500 mb-1 text-center">
+                <div className="mx-auto inline-block rounded-xl border border-neutral-200 p-1.5 md:p-2 bg-white shadow-sm">
+                  <div className="grid grid-cols-7 gap-[2px] text-[8px] md:text-[9px] text-neutral-500 mb-0.5 md:mb-1 text-center">
                     {["D", "L", "M", "M", "J", "V", "S"].map((d) => (
                       <div key={d} className="py-[2px]">
                         {d}
@@ -554,13 +563,12 @@ const ProductExplanation = () => {
                         <div
                           key={day}
                           className={[
-                            "rounded-[3px] flex items-center justify-center transition-all mx-auto",
+                            "rounded-[3px] flex items-center justify-center transition-all mx-auto text-[8px] md:text-[9px]",
                             picked ? "text-white" : "text-neutral-700",
                           ].join(" ")}
                           style={{
                             width: `${CELL}px`,
                             height: `${CELL}px`,
-                            fontSize: "9px",
                             background: picked ? ACCENT : "transparent",
                             boxShadow: picked ? "0 0 0 4px rgba(140,5,41,0.10)" : "none",
                           }}
@@ -580,24 +588,24 @@ const ProductExplanation = () => {
                 role="broky"
                 incoming={false}
                 size="mini"
-                extraClass="opacity-0 animate-[slideInLeft_320ms_ease-out_forwards]"
+                extraClass="opacity-0 animate-[slideInLeft_320ms_ease-out_forwards] origin-top-left -mt-10 md:mt-0 scale-[0.7] md:scale-100 leading-tight md:leading-relaxed"
               >
                 <span>
                   ¡Listo! Agendado para <b>jueves 12 a las 18:30</b>. Te atenderá:
                 </span>
-                <div className="mt-1.5 flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-neutral-200 overflow-hidden flex items-center justify-center">
-                    <span className="text-[10px] font-semibold text-neutral-700">MR</span>
+                <div className="mt-0 flex items-center gap-2 md:gap-2.5">
+                  <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-neutral-200 overflow-hidden flex items-center justify-center">
+                    <span className="text-[8px] md:text-[10px] font-semibold text-neutral-700">MR</span>
                   </div>
-                  <div className="text-[10px]">
+                  <div className="text-[8px] md:text-[10px]">
                     <p className="font-medium text-neutral-900">María Rojas</p>
-                    <p className="text-[9.5px] text-neutral-500">Corredora asociada</p>
-                    <p className="flex items-center gap-1 text-[9.5px] text-neutral-700 mt-0.5">
-                      <ArrowRight className="w-3.5 h-3.5" /> +56 9 1234 5678
+                    <p className="text-[8px] md:text-[9.5px] text-neutral-500">Corredora asociada</p>
+                    <p className="flex items-center gap-1 text-[8px] md:text-[9.5px] text-neutral-700 mt-0.5">
+                      <ArrowRight className="w-3 h-3 md:w-3.5 md:h-3.5" /> +56 9 1234 5678
                     </p>
                   </div>
                 </div>
-                <p className="mt-1 text-[10px]">Se contactará contigo enseguida para confirmar detalles.</p>
+                <p className="mt-0.5 text-[8px] md:text-[10px]">Se contactará contigo enseguida para confirmar detalles.</p>
               </ChatBubble>
             )}
 
