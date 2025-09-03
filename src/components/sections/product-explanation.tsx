@@ -217,7 +217,7 @@ function Bullet({ text }: { text: React.ReactNode }) {
 }
 
 const FRAME =
-  "w-[88%] max-w-[520px] mx-auto bg-white rounded-2xl border border-neutral-200 p-3 shadow-sm flex flex-col gap-2 relative h-[260px] overflow-hidden";
+  "w-[88%] max-w-[520px] mx-auto bg-white rounded-2xl border border-neutral-200 p-3 shadow-sm flex flex-col gap-2 relative min-h-[220px] md:min-h-[240px] lg:min-h-[260px] overflow-hidden";
 
 /* ============ Principal ============ */
 const ProductExplanation = () => {
@@ -460,7 +460,7 @@ const ProductExplanation = () => {
                     >
                       <div className="pt-2 px-2">
                         <p className="text-[10.5px] text-neutral-600 mb-2">{it.desc}</p>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <PhotoPlaceholder className="w-[80px] h-[56px]" />
                           <PhotoPlaceholder className="w-[80px] h-[56px]" />
                           <PhotoPlaceholder className="w-[80px] h-[56px]" />
@@ -622,7 +622,7 @@ const ProductExplanation = () => {
   };
 
   return (
-    <section className="mt-16 lg:mt-10 py-12 lg:py-16 !w-full !h-[1454px]">
+    <section className="mt-16 lg:mt-10 py-12 lg:py-16 w-full">
       <div className="container">
         {/* Título pequeño centrado: ¿Cómo funciona? */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -687,14 +687,14 @@ const ProductExplanation = () => {
                 <div className="lg:grid lg:grid-cols-2 lg:gap-0">
                   {/* Visual */}
                   <div
-                    className={`${isEven ? "lg:order-1" : "lg:order-2"} p-8 lg:p-10 flex items-center justify-center bg-neutral-50 h-[300px]`}
+                    className={`${isEven ? "lg:order-1" : "lg:order-2"} p-8 lg:p-10 flex items-center justify-center bg-neutral-50 min-h-[220px] md:min-h-[260px] lg:min-h-[300px]`}
                   >
                     {renderVisual(item.visual as any)}
                   </div>
 
                   {/* Texto */}
                   <div
-                    className={`${isEven ? "lg:order-2" : "lg:order-1"} p-8 lg:p-10 flex flex-col justify-center h-[300px]`}
+                    className={`${isEven ? "lg:order-2" : "lg:order-1"} p-8 lg:p-10 flex flex-col justify-center min-h-[220px] md:min-h-[260px] lg:min-h-[300px]`}
                   >
                     <div className="flex items-center gap-4 mb-4">
                       <span

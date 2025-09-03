@@ -61,7 +61,7 @@ export const ComparisonSection = () => {
 
         {/* Cabecera de comparación: etiquetas + VS */}
         <div className="mb-6">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-red-200" />
               <span className="inline-flex items-center rounded-full bg-red-50 text-red-800 border border-red-100 px-4 py-2 text-sm font-medium">
@@ -191,7 +191,10 @@ export const ComparisonSection = () => {
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <button className="bg-[#8C0529] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity duration-200 mb-2">
+          <button
+            className="bg-[#8C0529] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity duration-200 mb-2"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             Probar Broky ahora
           </button>
           <p className="text-neutral-600">Simple, seguro y gratis</p>
@@ -264,4 +267,3 @@ export const ComparisonSection = () => {
     </section>
   );
 };
-

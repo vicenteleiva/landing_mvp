@@ -55,7 +55,7 @@ const Features = () => {
           <div className="absolute left-0 right-0 top-9 lg:top-10 h-px bg-neutral-200/70" />
 
           {/* 5 hitos */}
-          <ul className="grid grid-cols-5 gap-4 lg:gap-6">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-6">
             {items.map(({ icon: Icon, title }, i) => (
               <li key={i} className="relative">
                 {/* Nodo (icono) */}
@@ -148,4 +148,3 @@ const Features = () => {
 };
 
 export default Features;
-

@@ -6,14 +6,22 @@ const Footer = () => {
     <footer className="border-t border-border bg-muted/30">
       <div className="container mx-auto max-w-7xl px-6 md:px-16 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left flex items-center gap-2">
+            <img
+              src="/image/broky-logo-light.webp"
+              alt="Broky logo"
+              width={24}
+              height={24}
+              className="h-6 w-6"
+              style={{ display: 'inline-block' }}
+            />
             <span className="font-display font-bold text-lg text-foreground">
               Broky
             </span>
           </div>
           <div className="text-center flex-1 md:flex-initial">
             <p className="text-sm text-muted-foreground">
-              Broky — Beta privada — Próximamente.
+              Broky Spa. 2025
             </p>
           </div>
           <div className="flex justify-center md:justify-end gap-6 text-center md:text-right">

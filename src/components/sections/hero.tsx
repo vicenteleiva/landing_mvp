@@ -84,12 +84,15 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="bg-background py-20 px-6 md:px-16 lg:px-24 !w-full !h-[432px]">
+    <section className="bg-background py-16 md:py-20 px-6 md:px-16 lg:px-24 w-full">
       <div className="mx-auto max-w-4xl">
         <div className="space-y-12 text-center">
           {/* Título */}
           <div className="space-y-6">
-            <h1 className="text-4xl leading-tight text-primary !font-(family-name:--font-inter) !font-bold !tracking-[-3.5px] md:!text-[51px] lg:!text-6xl">
+            <h1
+              className="text-4xl leading-tight text-primary !font-(family-name:--font-inter) !font-bold break-words whitespace-normal tracking-wide md:!text-[51px] lg:!text-6xl"
+              style={{ wordBreak: 'break-word', hyphens: 'auto', letterSpacing: '0.01em' }}
+            >
               Encuentra tu propiedad ideal en minutos con IA
             </h1>
           </div>
@@ -154,4 +157,3 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
-
