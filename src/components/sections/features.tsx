@@ -37,7 +37,7 @@ const Features = () => {
   }, []);
 
   return (
-    <section ref={rootRef} className="relative py-16 lg:py-20 bg-white">
+    <section ref={rootRef} className="relative py-16 lg:py-20">
       <div className="container mx-auto max-w-7xl px-6 lg:px-12">
         {/* Mini heading: ¿Por qué Broky? */}
         <div className="flex items-center justify-center gap-2 mb-8">

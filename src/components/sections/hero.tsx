@@ -84,7 +84,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="bg-background py-8 md:py-10 px-6 md:px-16 lg:px-24 w-full">
+    <section id="hero" className="relative min-h-[60svh] py-8 md:py-12 px-6 md:px-16 lg:px-24 w-full">
       <div className="mx-auto max-w-4xl">
         <div className="space-y-12 text-center">
           {/* Título */}

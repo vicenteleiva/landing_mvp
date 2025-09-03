@@ -47,7 +47,7 @@ export const ComparisonSection = () => {
   }, []);
 
   return (
-    <section className="bg-gray-50 py-20" ref={rootRef}>
+    <section className="py-20" ref={rootRef}>
       <div className="container">
         {/* Título centrado (como lo querías) */}
         <div className="text-center mb-10">
@@ -97,7 +97,7 @@ export const ComparisonSection = () => {
                 startAnim ? "animate-[headlineRight_420ms_ease-out_forwards]" : "",
               ].join(" ")}
             >
-              Minutos para encontrar, resolver y agendar con confianza
+              Minutos para encontrar, resolver y agendar seguro
             </h3>
           </div>
         </div>
@@ -192,8 +192,13 @@ export const ComparisonSection = () => {
         {/* CTA */}
         <div className="text-center mt-12">
           <button
-            className="bg-[#8C0529] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity duration-200 mb-2"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="bg-[#8C0529] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity duration-200 mb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            onClick={() => {
+              const el = document.getElementById('hero');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              else window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            aria-label="Ir al inicio para probar Broky"
           >
             Probar Broky ahora
           </button>

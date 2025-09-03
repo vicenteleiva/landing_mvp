@@ -9,7 +9,7 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   // Solo mostrar la imagen broky-logo-light.webp
   return (
-    <header className="w-full border-b border-border bg-background">
+    <header className="w-full bg-transparent">
       <nav
         role="navigation"
         aria-label="Main navigation"
@@ -37,9 +37,13 @@ export default function Navigation() {
 
           <div className="hidden items-center space-x-8 md:flex">
             <Link
-              href="#"
+              href="#product"
               className="rounded-md px-2 py-1 text-sm font-medium text-foreground transition-colors duration-200 hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              onClick={e => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('product');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
               Cómo funciona
             </Link>
@@ -64,7 +68,7 @@ export default function Navigation() {
               aria-label="Abrir menú de navegación"
               aria-expanded={open}
               className="inline-flex h-8 items-center justify-center rounded-md p-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground"
-              onClick={e => e.preventDefault()}
+              onClick={() => setOpen(!open)}
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -75,9 +79,14 @@ export default function Navigation() {
           <div className="md:hidden border-t border-border pt-4 mt-4">
             <div className="flex flex-col space-y-3">
               <Link
-                href="#"
+                href="#product"
                 className="rounded-md px-2 py-2 text-sm font-medium text-foreground transition-colors duration-200 hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                onClick={e => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(false);
+                  const el = document.getElementById('product');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Cómo funciona
               </Link>

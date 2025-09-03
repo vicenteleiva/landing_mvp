@@ -423,7 +423,7 @@ const ProductExplanation = () => {
         ];
 
         return (
-          <div className={FRAME}>
+          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px]`}>
             <ChatBubble role="user" incoming delay={0} size="mini">
               Departamento 2D en Providencia, $650.000 máx
             </ChatBubble>
@@ -530,7 +530,7 @@ const ProductExplanation = () => {
       case "calendar":
         const CELL = 14; // px
         return (
-          <div className={FRAME}>
+          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px]`}>
             {/* Primer mensaje + calendario */}
             <ChatBubble key={`calmsg-${calMsgKey}`} role="broky" incoming delay={0} size="mini">
               <div className="text-left">
@@ -622,7 +622,7 @@ const ProductExplanation = () => {
   };
 
   return (
-    <section className="mt-4 lg:mt-2 py-6 lg:py-8 w-full">
+    <section id="product" className="mt-4 lg:mt-2 py-6 lg:py-8 w-full">
       <div className="container">
         {/* Título pequeño centrado: ¿Cómo funciona? */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -711,7 +711,12 @@ const ProductExplanation = () => {
                     </div>
                     <p className="text-neutral-600 text-[15px] leading-relaxed mb-5">{item.desc}</p>
                     <a
-                      href="#try"
+                      href="#hero"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const el = document.getElementById('hero');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
                       className="inline-flex items-center font-semibold"
                       style={{ color: ACCENT }}
                     >
