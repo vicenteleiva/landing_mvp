@@ -1,0 +1,10 @@
+# Archivo para ignorar en Docker builds
+node_modules
+npm-debug.log*
+.next
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+.env*.local

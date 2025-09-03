@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     ],
   },
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
+  // Habilitar modo standalone para Docker
+  output: 'standalone',
   turbopack: {
     rules: {
       "*.{jsx,tsx}": {
