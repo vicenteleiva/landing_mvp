@@ -255,7 +255,7 @@ const ProductExplanation = () => {
       setDeleting(false);
     }
     return () => (t ? clearTimeout(t) : undefined);
-  }, [typingText, deleting, visibleCards]); // eslint-disable-line
+  }, [typingText, deleting, visibleCards]);
 
   /* ----- Reveal por scroll ----- */
   useEffect(() => {
@@ -299,7 +299,7 @@ const ProductExplanation = () => {
 
     cycle();
     return () => resultsTimers.clearAll();
-  }, [visibleCards]); // eslint-disable-line
+  }, [visibleCards]);
 
   /* ----- Animación 3 (Document) LOOP ----- */
   const [docCycle, setDocCycle] = useState(0);
@@ -314,7 +314,7 @@ const ProductExplanation = () => {
     };
     cycle();
     return () => docTimers.clearAll();
-  }, [visibleCards]); // eslint-disable-line
+  }, [visibleCards]);
 
   /* ----- Animación 4 (Calendar) LOOP ----- */
   const [calMsgKey, setCalMsgKey] = useState(0);
@@ -341,7 +341,7 @@ const ProductExplanation = () => {
 
     cycle();
     return () => calTimers.clearAll();
-  }, [visibleCards]); // eslint-disable-line
+  }, [visibleCards]);
 
   const cards = [
     {
@@ -622,7 +622,7 @@ const ProductExplanation = () => {
   };
 
   return (
-    <section className="mt-16 lg:mt-10 py-12 lg:py-16 w-full">
+    <section className="mt-4 lg:mt-2 py-6 lg:py-8 w-full">
       <div className="container">
         {/* Título pequeño centrado: ¿Cómo funciona? */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -674,7 +674,9 @@ const ProductExplanation = () => {
             return (
               <div
                 key={index}
-                ref={(el) => (cardRefs.current[index] = el)}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
                 data-card-index={index}
                 className={`bg-white rounded-3xl shadow-lg overflow-hidden transform transition-all duration-500 ease-out ${
                   isVisible
