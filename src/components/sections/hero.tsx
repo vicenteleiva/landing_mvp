@@ -2,6 +2,7 @@
 
 import { ArrowUp } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const ACCENT = "#8C0529";
 
@@ -15,6 +16,8 @@ const HeroSection = () => {
   // Valor real que escribe el usuario
   const [value, setValue] = useState("");
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
+  const router = useRouter();
+  const [transitioning, setTransitioning] = useState(false);
 
   const examples = [
     "Busco departamento 2D en Providencia, $600.000 máx",
@@ -72,8 +75,16 @@ const HeroSection = () => {
   }, [currentText, currentIndex, isTyping, isPaused, examples]);
 
   const onSubmit = () => {
-    if (!value.trim()) return;
-    console.log("Query:", value.trim());
+    const q = value.trim();
+    if (!q) return;
+    try {
+      const url = `/chat?q=${encodeURIComponent(q)}`;
+      setTransitioning(true);
+      // Pequeño delay para permitir pintar el overlay antes de navegar
+      setTimeout(() => router.push(url), 10);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
@@ -152,6 +163,78 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {transitioning && (
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-blue-50 via-white to-white flex flex-col">
+          {/* Header con logo a la izquierda y solo Contacto a la derecha */}
+          <header className="px-6 md:px-8 pt-6 pb-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
+                <span className="font-semibold text-neutral-900">Broky</span>
+              </div>
+              <a href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">Contacto</a>
+            </div>
+          </header>
+
+          {/* Hero replicado para animar: título/subtítulo se difuminan */}
+          <div className="mx-auto max-w-4xl w-full px-6 md:px-8">
+            <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 text-center opacity-100 animate-[fadeOut_420ms_ease-out_forwards] [animation-delay:40ms]">
+              Encuentra tu propiedad ideal en minutos con IA
+            </h1>
+            <p className="text-center text-neutral-600 mt-6 opacity-100 animate-[fadeOut_420ms_ease-out_forwards] [animation-delay:60ms]">
+              Escribe lo que buscas y deja que Broky haga el resto.
+            </p>
+          </div>
+
+          {/* Card del chat que baja y reduce altura */}
+          <div className="flex-1 w-full relative">
+            <div className="mx-auto max-w-3xl px-6 md:px-8">
+              <div className="relative">
+                <div className="rounded-2xl border border-neutral-200 bg-white shadow-[0_6px_30px_-12px_rgba(0,0,0,0.15)] px-5 pr-14 py-6 overflow-hidden animate-[chatSlide_140ms_cubic-bezier(.22,.65,.3,1)_forwards] will-change-transform">
+                  <div className="text-left text-neutral-400">{value ? value : ""}</div>
+                </div>
+                {/* Mensaje del usuario que vuela a la zona de mensajes */}
+                {value.trim() && (
+                  <div className="absolute right-4 -bottom-4 animate-[msgFly_140ms_cubic-bezier(.22,.65,.3,1)_forwards] will-change-transform">
+                    <div className="bg-neutral-100 text-neutral-900 rounded-2xl px-4 py-3 shadow-sm max-w-[85vw] text-[15px]">
+                      {value.trim()}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Input final en la parte inferior, simulando el chat */}
+          <div className="sticky bottom-0 inset-x-0 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3">
+            <div className="mx-auto max-w-3xl">
+              <div className="rounded-full bg-white border border-neutral-200 shadow-[0_6px_24px_-12px_rgba(0,0,0,0.2)] flex items-center gap-2 px-4 py-2">
+                <div className="flex-1 text-left text-neutral-400 text-[15px] py-1">Cargando…</div>
+                <div className="inline-flex items-center justify-center rounded-full h-8 w-8 text-white" style={{ backgroundColor: ACCENT }}>
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v2" /><path d="M12 20v2" /><path d="M4.93 4.93l1.41 1.41" /><path d="M17.66 17.66l1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="M4.93 19.07l1.41-1.41" /><path d="M17.66 6.34l1.41-1.41" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-center text-[12px] text-neutral-500 mt-2">Broky está en beta.</p>
+            </div>
+          </div>
+
+          <style jsx>{`
+            @keyframes fadeOut { to { opacity: 0; transform: translateY(-6px); } }
+            /* Calcula el destino para que el card coincida con la zona del chat */
+            @keyframes chatSlide {
+              0% { transform: translateY(0) scaleY(1); opacity: 1; }
+              100% { transform: translateY(calc(100svh - 164px)) scaleY(0.62); opacity: 1; }
+            }
+            @keyframes msgFly {
+              0% { transform: translate(0, 0); }
+              100% { transform: translate(-4px, calc(-100svh + 164px)); }
+            }
+          `}</style>
+        </div>
+      )}
     </section>
   );
 };
