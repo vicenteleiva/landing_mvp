@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const ACCENT = "#8C0529";
 
@@ -15,9 +16,17 @@ function BrokyMark({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
+export default function ChatPage() {
+  return (
+    <Suspense fallback={null}>
+      <ChatPageContent />
+    </Suspense>
+  );
+}
+
 type Message = { role: "user" | "broky"; content: string };
 
-export default function ChatPage() {
+function ChatPageContent() {
   const params = useSearchParams();
   const initial = params.get("q")?.toString() ?? "";
 
@@ -59,9 +68,9 @@ export default function ChatPage() {
             <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
             <span className="font-semibold text-neutral-900">Broky</span>
           </div>
-          <a href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
+          <Link href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
             Contacto
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -118,7 +127,7 @@ export default function ChatPage() {
                 <p className="font-semibold text-neutral-900 text-[15px] md:text-base">Lista de espera</p>
               </div>
               <div className="flex items-center gap-3">
-                <a href="/contacto" className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</a>
+                <Link href="/contacto" className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
                 <button onClick={onClose} className="text-[13px] md:text-sm text-neutral-600 hover:text-neutral-900">Cerrar</button>
               </div>
             </div>
@@ -190,9 +199,9 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     return (
       <div className="text-center space-y-3 py-4">
         <p className="text-[15px]">¡Gracias! Te avisaremos en breve.</p>
-        <a href="/#hero" className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
+        <Link href="/#hero" className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
           Volver al inicio
-        </a>
+        </Link>
       </div>
     );
   }

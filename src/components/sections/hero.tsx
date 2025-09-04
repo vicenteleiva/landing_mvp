@@ -3,6 +3,7 @@
 import { ArrowUp } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const ACCENT = "#8C0529";
 
@@ -173,7 +174,7 @@ const HeroSection = () => {
                 <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
                 <span className="font-semibold text-neutral-900">Broky</span>
               </div>
-              <a href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">Contacto</a>
+              <Link href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">Contacto</Link>
             </div>
           </header>
 
