@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { trackForm, trackClick, trackChat } from "@/lib/analytics";
 
@@ -160,6 +160,7 @@ function Dots() {
 }
 
 function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -171,10 +172,10 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   const valid = useMemo(() => {
     const okName = name.trim().length >= 2;
     const okEmail = /.+@.+\..+/.test(email);
-    const okPhone = phone.trim().length >= 8;
-    const okReason = reason.trim().length >= 10;
-    return okName && okEmail && okPhone && okReason;
-  }, [name, email, phone, reason]);
+    const okPhone = phone.trim().replace(/\D/g, "").length >= 8;
+    // Razón opcional: no bloquea el envío
+    return okName && okEmail && okPhone;
+  }, [name, email, phone]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -193,6 +194,8 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         body: JSON.stringify({ name, email, phone, reason, initial_message: initialMessage }),
       });
       if (!res.ok) throw new Error("Error guardando");
+      // Redirige a la página de agradecimiento
+      router.push("/thanksyou");
       setDone(true);
     } catch (err: any) {
       setError(err?.message || "Error inesperado");

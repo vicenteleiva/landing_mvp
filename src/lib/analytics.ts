@@ -22,8 +22,19 @@ function parseUtm(): Record<string, string> | null {
 }
 
 function baseFields() {
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : undefined
+
+  // Diferencia vistas por ruta: landing, form (chat) y thanksyou
+  const page = (() => {
+    if (!pathname) return "landing" as const
+    if (pathname.startsWith("/chat")) return "form" as const
+    if (pathname.startsWith("/thanksyou")) return "thanksyou" as const
+    return "landing" as const
+  })()
+
   return {
-    page: "landing" as const,
+    page,
     path:
       typeof window !== "undefined"
         ? window.location.pathname + window.location.search
@@ -97,4 +108,3 @@ export async function trackForm(params: {
     meta: params.meta ?? null,
   })
 }
-
