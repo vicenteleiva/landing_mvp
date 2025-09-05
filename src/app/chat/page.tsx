@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { trackForm, trackClick, trackChat } from "@/lib/analytics";
 
 const ACCENT = "#8C0529";
 
@@ -68,7 +69,7 @@ function ChatPageContent() {
             <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
             <span className="font-semibold text-neutral-900">Broky</span>
           </div>
-          <Link href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
+          <Link href="/contacto" onClick={() => trackClick({ buttonId: 'chat-header-contacto', buttonText: 'Contacto' }).catch(() => {})} className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
             Contacto
           </Link>
         </div>
@@ -127,8 +128,8 @@ function ChatPageContent() {
                 <p className="font-semibold text-neutral-900 text-[15px] md:text-base">Lista de espera</p>
               </div>
               <div className="flex items-center gap-3">
-                <Link href="/contacto" className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
-                <button onClick={onClose} className="text-[13px] md:text-sm text-neutral-600 hover:text-neutral-900">Cerrar</button>
+                <Link href="/contacto" onClick={() => trackClick({ buttonId: 'waitlist-contacto', buttonText: 'Contacto' }).catch(() => {})} className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
+                <button onClick={() => { trackClick({ buttonId: 'waitlist-close', buttonText: 'Cerrar' }).catch(() => {}); onClose(); }} className="text-[13px] md:text-sm text-neutral-600 hover:text-neutral-900">Cerrar</button>
               </div>
             </div>
             <div className="p-3.5 md:p-4 space-y-1.5 md:space-y-2 overflow-auto">
@@ -181,6 +182,11 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     setLoading(true);
     setError(null);
     try {
+      // Track form submission to Supabase
+      trackForm({
+        formId: 'waitlist',
+        fields: { name, email, phone, reason, initial_message: initialMessage }
+      }).catch(() => {})
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -199,7 +205,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     return (
       <div className="text-center space-y-3 py-4">
         <p className="text-[15px]">¡Gracias! Te avisaremos en breve.</p>
-        <Link href="/#hero" className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
+        <Link href="/#hero" onClick={() => trackClick({ buttonId: 'waitlist-back-home', buttonText: 'Volver al inicio' }).catch(() => {})} className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
           Volver al inicio
         </Link>
       </div>
@@ -245,6 +251,11 @@ function ChatInput({ mountDelayMs = 0 }: { mountDelayMs?: number }) {
   }, [mountDelayMs]);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const q = val.trim();
+    if (q) {
+      trackChat({ message: q }).catch(() => {})
+      trackClick({ buttonId: 'chat-send', buttonText: 'Enviar' }).catch(() => {})
+    }
     setVal("");
   };
   return (

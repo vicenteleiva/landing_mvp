@@ -4,6 +4,7 @@ import { ArrowUp } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trackChat, trackClick } from "@/lib/analytics";
 
 const ACCENT = "#8C0529";
 
@@ -79,6 +80,8 @@ const HeroSection = () => {
     const q = value.trim();
     if (!q) return;
     try {
+      // Track chat message (fire-and-forget)
+      trackChat({ message: q }).catch(() => {});
       const url = `/chat?q=${encodeURIComponent(q)}`;
       setTransitioning(true);
       // Pequeño delay para permitir pintar el overlay antes de navegar
@@ -141,7 +144,10 @@ const HeroSection = () => {
               {/* Botón enviar */}
               <button
                 type="button"
-                onClick={onSubmit}
+                onClick={() => {
+                  trackClick({ buttonId: "hero-send", buttonText: "Enviar" }).catch(() => {});
+                  onSubmit();
+                }}
                 aria-label="Enviar consulta"
                 className="
                   absolute right-4 bottom-4

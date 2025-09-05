@@ -3,6 +3,7 @@ import "./globals.css";
 import VisualEditsMessenger from "../visual-edits/VisualEditsMessenger";
 import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
+import PageViewTracker from "@/components/analytics/PageViewTracker";
 
 export const metadata: Metadata = {
   title: "Broky - Sell & Rent Properties Without Humans",
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased min-h-screen bg-gradient-to-b from-blue-50 via-white to-white">
         <ErrorReporter />
+        <PageViewTracker />
         <Script
           src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/scripts//route-messenger.js"
           strategy="afterInteractive"
