@@ -180,7 +180,7 @@ const HeroSection = () => {
                 <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
                 <span className="font-semibold text-neutral-900">Broky</span>
               </div>
-              <Link href="/contacto" className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">Contacto</Link>
+              <Link href="/contacto" onClick={() => trackClick({ buttonId: 'overlay-contacto', buttonText: 'Contacto' }).catch(() => {})} className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">Contacto</Link>
             </div>
           </header>
 

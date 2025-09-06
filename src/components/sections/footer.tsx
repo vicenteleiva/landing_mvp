@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
+import { trackClick } from "@/lib/analytics";
 
 const ACCENT = "#8C0529";
 
@@ -30,6 +31,7 @@ const Footer = () => {
               aria-label="Quiero probarlo"
               onClick={(e) => {
                 e.preventDefault();
+                trackClick({ buttonId: 'footer-quiero-probarlo', buttonText: 'Quiero probarlo' }).catch(() => {})
                 const el = document.getElementById('hero');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
@@ -50,6 +52,7 @@ const Footer = () => {
                   <Link href="#hero" className="hover:text-neutral-900 transition-colors"
                     onClick={(e) => {
                       e.preventDefault();
+                      trackClick({ buttonId: 'footer-home', buttonText: 'Home' }).catch(() => {})
                       const el = document.getElementById('hero');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
@@ -59,6 +62,7 @@ const Footer = () => {
                   <Link href="#product" className="hover:text-neutral-900 transition-colors"
                     onClick={(e) => {
                       e.preventDefault();
+                      trackClick({ buttonId: 'footer-product', buttonText: 'Product' }).catch(() => {})
                       const el = document.getElementById('product');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
@@ -79,6 +83,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="hover:text-neutral-900 transition-colors"
                     aria-label="Instagram de Broky"
+                    onClick={() => { trackClick({ buttonId: 'footer-instagram', buttonText: 'Instagram' }).catch(() => {}) }}
                   >
                     Instagram
                   </a>
@@ -90,6 +95,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="hover:text-neutral-900 transition-colors"
                     aria-label="LinkedIn de Broky"
+                    onClick={() => { trackClick({ buttonId: 'footer-linkedin', buttonText: 'LinkedIn' }).catch(() => {}) }}
                   >
                     LinkedIn
                   </a>
@@ -113,6 +119,7 @@ const Footer = () => {
               href="/contacto"
               className="hover:text-neutral-800 transition-colors"
               aria-label="Ir a la página de contacto de Broky"
+              onClick={() => trackClick({ buttonId: 'footer-contacto', buttonText: 'Contacto' }).catch(() => {})}
             >
               Contacto
             </Link>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { trackClick } from "@/lib/analytics";
 
 export const ComparisonSection = () => {
   const pairs: { left: string; right: string }[] = [
@@ -236,6 +237,7 @@ export const ComparisonSection = () => {
           <button
             className="bg-[#8C0529] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity duration-200 mb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             onClick={() => {
+              trackClick({ buttonId: 'cta-probar-broky-ahora', buttonText: 'Probar Broky ahora' }).catch(() => {})
               const el = document.getElementById('hero');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               else window.scrollTo({ top: 0, behavior: 'smooth' });

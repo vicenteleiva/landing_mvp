@@ -119,7 +119,7 @@ function ChatPageContent() {
       {/* Waitlist Sheet */}
       {openWaitlist && (
         <div className="fixed inset-0 z-20 bg-neutral-900/25 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden max-h-[80svh] flex flex-col opacity-0 animate-[sheetIn_200ms_ease-out_forwards]">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden max-h-[80svh] flex flex-col opacity-0 animate-[sheetIn_200ms_ease-out_forwards]">
             <div className="px-4 md:px-5 py-2.5 md:py-3 flex items-center justify-between" style={{ background: "linear-gradient(180deg, rgba(140,5,41,0.06), rgba(255,255,255,0))" }}>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-neutral-50 border border-neutral-200 grid place-items-center">
@@ -193,9 +193,13 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, reason, initial_message: initialMessage }),
       });
-      if (!res.ok) throw new Error("Error guardando");
-      // Redirige a la página de agradecimiento
-      router.push("/thanksyou");
+      if (!res.ok) {
+        let detail = "";
+        try { const j = await res.json(); detail = j?.error || j?.message || "" } catch {}
+        throw new Error(detail || "Error guardando");
+      }
+      // Mostrar tarjeta de agradecimiento en la misma vista
+      trackClick({ buttonId: 'waitlist-thanks', buttonText: 'Gracias' }).catch(() => {})
       setDone(true);
     } catch (err: any) {
       setError(err?.message || "Error inesperado");
@@ -206,11 +210,20 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
 
   if (done) {
     return (
-      <div className="text-center space-y-3 py-4">
-        <p className="text-[15px]">¡Gracias! Te avisaremos en breve.</p>
-        <Link href="/#hero" onClick={() => trackClick({ buttonId: 'waitlist-back-home', buttonText: 'Volver al inicio' }).catch(() => {})} className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
-          Volver al inicio
-        </Link>
+      <div className="py-8 md:py-10">
+        <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm p-6 md:p-8 text-center">
+          <div className="mx-auto w-12 h-12 rounded-full bg-[rgba(140,5,41,0.08)] border border-[rgba(140,5,41,0.18)] grid place-items-center mb-5">
+            <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 mb-2">Muchas gracias por registrarte!</h2>
+          <p className="text-neutral-700 mb-6">Te contactaremos en breve.</p>
+          <div className="flex items-center justify-center gap-3">
+            <Link href="/" onClick={() => trackClick({ buttonId: 'thanks-home', buttonText: 'Ir al inicio' }).catch(() => {})} className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-white" style={{ background: ACCENT }}>
+              Ir al inicio
+            </Link>
+            <button onClick={() => { trackClick({ buttonId: 'thanks-close', buttonText: 'Cerrar' }).catch(() => {}); router.push('/'); }} className="inline-flex items-center justify-center rounded-lg px-4 py-2 border border-neutral-300 text-neutral-800 hover:bg-neutral-50">Cerrar</button>
+          </div>
+        </div>
       </div>
     );
   }

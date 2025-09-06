@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { trackClick } from "@/lib/analytics";
 import {
   Search,
   CheckSquare,
@@ -722,6 +723,7 @@ const ProductExplanation = () => {
                       href="#hero"
                       onClick={(e) => {
                         e.preventDefault();
+                        trackClick({ buttonId: 'probar-ahora', buttonText: 'Probar ahora' }).catch(() => {})
                         const el = document.getElementById('hero');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
