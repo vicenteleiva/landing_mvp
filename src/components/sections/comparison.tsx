@@ -246,7 +246,7 @@ export const ComparisonSection = () => {
           >
             Probar Broky ahora
           </button>
-          <p className="text-neutral-600">Simple, seguro y gratis</p>
+          <p className="text-neutral-600">Simple y seguro</p>
         </div>
       </div>
 

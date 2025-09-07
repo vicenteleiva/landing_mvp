@@ -65,11 +65,11 @@ function ChatPageContent() {
       {/* Header */}
       <header className="px-6 md:px-8 pt-6 pb-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" aria-label="Ir a la página principal" onClick={() => trackClick({ buttonId: 'chat-header-logo', buttonText: 'Logo' }).catch(() => {})} className="flex items-center gap-2">
             <img src="/image/broky-logo-light.webp" alt="Broky" className="h-6 w-6" />
             <span className="font-semibold text-neutral-900">Broky</span>
-          </div>
-          <Link href="/contacto" onClick={() => trackClick({ buttonId: 'chat-header-contacto', buttonText: 'Contacto' }).catch(() => {})} className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
+          </Link>
+          <Link href="/contacto?src=chat" onClick={() => trackClick({ buttonId: 'chat-header-contacto', buttonText: 'Contacto' }).catch(() => {})} className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100">
             Contacto
           </Link>
         </div>
@@ -128,13 +128,16 @@ function ChatPageContent() {
                 <p className="font-semibold text-neutral-900 text-[15px] md:text-base">Lista de espera</p>
               </div>
               <div className="flex items-center gap-3">
-                <Link href="/contacto" onClick={() => trackClick({ buttonId: 'waitlist-contacto', buttonText: 'Contacto' }).catch(() => {})} className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
+                <Link href="/contacto?src=chat" onClick={() => trackClick({ buttonId: 'waitlist-contacto', buttonText: 'Contacto' }).catch(() => {})} className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
                 <button onClick={() => { trackClick({ buttonId: 'waitlist-close', buttonText: 'Cerrar' }).catch(() => {}); onClose(); }} className="text-[13px] md:text-sm text-neutral-600 hover:text-neutral-900">Cerrar</button>
               </div>
             </div>
             <div className="p-3.5 md:p-4 space-y-1.5 md:space-y-2 overflow-auto">
               <p className="text-[13px] md:text-[14px] leading-snug">
-                Estamos lanzando la beta privada de Broky. Pronto podrás ver propiedades que calzan contigo en minutos.
+                Broky está en construcción para convertirse en algo increíble.
+              </p>
+              <p className="text-[13px] md:text-[14px] leading-snug">
+                Por eso abrimos esta lista exclusiva: para que pruebes antes que nadie la nueva forma de encontrar propiedades en minutos.
               </p>
               <p className="text-[13px] md:text-[14px] leading-snug">
                 Únete a la lista y sé de los primeros en acceder.
@@ -229,28 +232,28 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-2.5 md:space-y-3">
+    <form onSubmit={submit} className="space-y-2 md:space-y-3">
       <div className="grid grid-cols-1 gap-1.5">
-        <label className="text-[12px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
-        <input id="name" value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
+        <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
+        <input id="name" value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
-        <label className="text-[12px] md:text-[13px] font-medium" htmlFor="email">Email</label>
-        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
+        <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="email">Email</label>
+        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
-        <label className="text-[12px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
-        <input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
+        <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
+        <input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
-        <label className="text-[12px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
-        <textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-2 min-h-[64px] md:min-h-[72px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
-        <div className="text-right text-xs text-neutral-500">{reason.length}/400</div>
+        <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
+        <textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 min-h-[54px] md:min-h-[72px] text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
+        <div className="text-right text-[10px] md:text-xs text-neutral-500">{reason.length}/400</div>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-[12px] md:text-sm text-red-600">{error}</p>}
 
-      <button type="submit" disabled={!valid || loading} className="w-full rounded-lg px-4 py-2 text-white disabled:opacity-60 shadow-sm" style={{ background: ACCENT }}>
+      <button type="submit" disabled={!valid || loading} className="w-full rounded-lg px-3.5 md:px-4 py-1.5 md:py-2 text-[14px] md:text-[16px] text-white disabled:opacity-60 shadow-sm" style={{ background: ACCENT }}>
         {loading ? "Enviando..." : "Unirme a la lista"}
       </button>
     </form>

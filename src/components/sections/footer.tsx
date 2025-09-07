@@ -23,9 +23,7 @@ const Footer = () => {
               />
               <span className="text-lg font-bold text-neutral-900">Broky</span>
             </div>
-            <p className="text-neutral-600 max-w-xs leading-relaxed mb-4">
-              Sell & Rent Properties Without Humans
-            </p>
+            {/* Tagline removed per request */}
             <Link
               href="#hero"
               aria-label="Quiero probarlo"
@@ -68,7 +66,13 @@ const Footer = () => {
                     }}
                   >Product</Link>
                 </li>
-                <li className="text-neutral-400">Contact</li>
+                <li>
+                  <Link href="/contacto?src=footer" className="hover:text-neutral-900 transition-colors"
+                    onClick={() => {
+                      trackClick({ buttonId: 'footer-contact', buttonText: 'Contact' }).catch(() => {})
+                    }}
+                  >Contact</Link>
+                </li>
               </ul>
             </div>
 

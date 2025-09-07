@@ -140,6 +140,7 @@ function MiniListingCompact({
   selected = false,
   onClick,
   delay = 0,
+  imgSrc,
 }: {
   title: string;
   price: string;
@@ -147,6 +148,7 @@ function MiniListingCompact({
   selected?: boolean;
   onClick?: () => void;
   delay?: number;
+  imgSrc?: string;
 }) {
   return (
     <button
@@ -161,7 +163,11 @@ function MiniListingCompact({
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center gap-1.5 md:gap-2">
-        <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-neutral-200 shrink-0" />
+        <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-neutral-200 shrink-0 overflow-hidden">
+          {imgSrc ? (
+            <img src={imgSrc} alt="Foto del departamento" className="w-full h-full object-contain p-0.5" />
+          ) : null}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[10px] md:text-[11px] font-medium text-neutral-900 truncate">{title}</p>
@@ -351,7 +357,7 @@ const ProductExplanation = () => {
       title: "Cuéntale a Broky qué buscas",
       icon: Search,
       visual: "search",
-      desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $600.000 máx, admite mascotas y cerca del metro").',
+      desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $650.000 máx, admite mascotas").',
     },
     {
       number: "02",
@@ -418,7 +424,7 @@ const ProductExplanation = () => {
           },
           {
             title: "Depto 2D/2B — Providencia",
-            price: "$670.000",
+            price: "$650.000",
             subtitle: "Pedro de Valdivia 890 · 52 m² · Piso 5",
             desc: "Amplio, con bodega y logia. Excelente conectividad y servicios a pasos…",
           },
@@ -453,6 +459,15 @@ const ProductExplanation = () => {
                       selected={selected}
                       onClick={() => setExpandedIndex(i)}
                       delay={showResultCards ? i * 120 : 0}
+                      imgSrc={
+                        i === 0
+                          ? "/image/living-room.svg"
+                          : i === 1
+                          ? "/image/studio-room.svg"
+                          : i === 2
+                          ? "/image/living-lounge.svg"
+                          : undefined
+                      }
                     />
 
                     <div
@@ -464,9 +479,35 @@ const ProductExplanation = () => {
                       <div className="pt-1.5 md:pt-2 px-2">
                         <p className="text-[10px] md:text-[10.5px] text-neutral-600 mb-1.5 md:mb-2">{it.desc}</p>
                         <div className="flex flex-wrap gap-1.5 md:gap-2">
-                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
-                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
-                          <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          {i === 0 ? (
+                            <div className="w-[68px] h-[48px] md:w-[80px] md:h-[56px] rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+                              <img src="/image/living-room.svg" alt="Foto principal Av. Holanda" className="w-full h-full object-contain p-1.5" />
+                            </div>
+                          ) : i === 1 ? (
+                            <div className="w-[68px] h-[48px] md:w-[80px] md:h-[56px] rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+                              <img src="/image/studio-room.svg" alt="Foto principal Los Leones" className="w-full h-full object-contain p-1.5" />
+                            </div>
+                          ) : i === 2 ? (
+                            <div className="w-[68px] h-[48px] md:w-[80px] md:h-[56px] rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+                              <img src="/image/living-lounge.svg" alt="Foto principal Pedro de Valdivia" className="w-full h-full object-contain p-1.5" />
+                            </div>
+                          ) : (
+                            <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          )}
+                          {i === 0 ? (
+                            <div className="w-[68px] h-[48px] md:w-[80px] md:h-[56px] rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+                              <img src="/image/bathroom.svg" alt="Baño Av. Holanda" className="w-full h-full object-contain p-1.5" />
+                            </div>
+                          ) : (
+                            <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          )}
+                          {i === 0 ? (
+                            <div className="w-[68px] h-[48px] md:w-[80px] md:h-[56px] rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+                              <img src="/image/garden.svg" alt="Áreas verdes / quincho Av. Holanda" className="w-full h-full object-contain p-1.5" />
+                            </div>
+                          ) : (
+                            <PhotoPlaceholder className="w-[68px] h-[48px] md:w-[80px] md:h-[56px]" />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -649,7 +690,7 @@ const ProductExplanation = () => {
               {
                 number: "01",
                 title: "Cuéntale a Broky qué buscas",
-                desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $600.000 máx, admite mascotas y cerca del metro").',
+                desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $650.000 máx, admite mascotas").',
                 icon: Search,
                 visual: "search",
               },

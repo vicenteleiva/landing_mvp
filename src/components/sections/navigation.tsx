@@ -56,13 +56,14 @@ export default function Navigation() {
             >
               Acceder
             </Link>
-            <button
-              aria-label="Contactar con Broky"
+            <Link
+              href="/contacto"
+              aria-label="Ir a contacto"
               className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-foreground transition-all duration-200 hover:bg-accent hover:text-primary"
-              onClick={e => { e.preventDefault(); trackClick({ buttonId: 'nav-contact', buttonText: 'Contacto' }).catch(() => {}) }}
+              onClick={() => { trackClick({ buttonId: 'nav-contact', buttonText: 'Contacto' }).catch(() => {}) }}
             >
               Contacto
-            </button>
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -100,13 +101,14 @@ export default function Navigation() {
               >
                 Acceder
               </Link>
-              <button
-                aria-label="Contactar con Broky"
+              <Link
+                href="/contacto"
+                aria-label="Ir a contacto"
                 className="inline-flex h-8 w-full items-center justify-start whitespace-nowrap rounded-md px-2 text-sm font-medium text-foreground transition-all duration-200 hover:bg-accent hover:text-primary"
-                onClick={e => { e.preventDefault(); trackClick({ buttonId: 'nav-contact-mobile', buttonText: 'Contacto' }).catch(() => {}) }}
+                onClick={() => { setOpen(false); trackClick({ buttonId: 'nav-contact-mobile', buttonText: 'Contacto' }).catch(() => {}) }}
               >
                 Contacto
-              </button>
+              </Link>
             </div>
           </div>
         )}

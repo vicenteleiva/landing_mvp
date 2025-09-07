@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" stroke="#3A3A3A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Bathroom line icon: mirror, sink, towel, toilet, shower -->
+  <!-- Mirror -->
+  <rect x="12" y="18" width="22" height="18" rx="2"/>
+  <!-- Vanity + sink -->
+  <rect x="10" y="46" width="28" height="16" rx="2"/>
+  <path d="M10 54h28"/>
+  <path d="M22 46v-4c0-3 2-5 5-5"/>
+  <path d="M27 37c3 0 5 2 5 5v4"/>
+  <!-- Towel -->
+  <path d="M44 38h16M46 38v10M58 38v10"/>
+  <!-- Toilet -->
+  <path d="M64 44h16v12c0 3-2 5-5 5H69c-3 0-5-2-5-5V44z"/>
+  <path d="M68 61v8"/>
+  <!-- Shower head and partition -->
+  <path d="M84 30v40"/>
+  <path d="M78 36c3 0 6 3 6 6"/>
+  <path d="M78 36h6"/>
+  <!-- Floor line -->
+  <path d="M8 78H90"/>
+</svg>
