@@ -13,7 +13,9 @@ import { getSessionId } from "@/lib/session";
 
 const ACCENT = "#8C0529"; // rojo acento usado en la landing
 
-export default function ContactoPage() {
+import { Suspense } from "react";
+
+function ContactoPageInner() {
   const router = useRouter();
   const search = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -26,9 +28,7 @@ export default function ContactoPage() {
     const fields = Object.fromEntries(data.entries());
     try {
       setLoading(true);
-      // Fire-and-forget analytics for the contact form
       trackForm({ formId: "contacto", fields }).catch(() => {});
-      // Compose metadata for Supabase insert
       const session_id = getSessionId();
       const originParam = (search.get("src") || "").toLowerCase();
       const origin = ["chat", "waitlist", "nav", "footer", "hero"].includes(originParam)
@@ -43,7 +43,6 @@ export default function ContactoPage() {
         for (const k of keys) { const v = params.get(k); if (v) obj[k] = v; }
         return Object.keys(obj).length ? obj : null;
       })();
-      // Persist in Supabase
       await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,7 +59,7 @@ export default function ContactoPage() {
       }).catch(() => {});
       router.push("/thanksyou");
     } finally {
-      // keep loading state until navigation
+      setLoading(false);
     }
   }
 
@@ -145,5 +144,13 @@ export default function ContactoPage() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function ContactoPage() {
+  return (
+    <Suspense>
+      <ContactoPageInner />
+    </Suspense>
   );
 }
