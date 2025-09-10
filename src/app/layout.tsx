@@ -4,6 +4,8 @@ import VisualEditsMessenger from "../visual-edits/VisualEditsMessenger";
 import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
+import MetaPixel from "@/components/analytics/MetaPixel";
+import FbqPageViewTracker from "@/components/analytics/FbqPageViewTracker";
 
 export const metadata: Metadata = {
   title: "Broky - Sell & Rent Properties Without Humans",
@@ -18,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen bg-gradient-to-b from-blue-50 via-white to-white">
+        <MetaPixel />
         <ErrorReporter />
         <PageViewTracker />
+        <FbqPageViewTracker />
         <Script
           src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/scripts//route-messenger.js"
           strategy="afterInteractive"
