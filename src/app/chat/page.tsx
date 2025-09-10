@@ -186,11 +186,6 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     setLoading(true);
     setError(null);
     try {
-      // Track form submission to Supabase
-      trackForm({
-        formId: 'waitlist',
-        fields: { name, email, phone, reason, initial_message: initialMessage }
-      }).catch(() => {})
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -201,6 +196,15 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         try { const j = await res.json(); detail = j?.error || j?.message || "" } catch {}
         throw new Error(detail || "Error guardando");
       }
+      // Update URL to reflect waitlist submission while staying on the same UI
+      const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
+      router.replace(`/chat/waitlist${qParam}`);
+
+      // Track form submission AFTER URL change so it reflects on Supabase
+      trackForm({
+        formId: 'waitlist',
+        fields: { name, email, phone, reason, initial_message: initialMessage }
+      }).catch(() => {})
       // Mostrar tarjeta de agradecimiento en la misma vista
       trackClick({ buttonId: 'waitlist-thanks', buttonText: 'Gracias' }).catch(() => {})
       setDone(true);
