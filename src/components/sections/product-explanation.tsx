@@ -591,11 +591,11 @@ const ProductExplanation = () => {
 
                 <div className="mx-auto inline-block rounded-xl border border-neutral-200 p-1.5 md:p-2 bg-white shadow-sm">
                   <div className="grid grid-cols-7 gap-[2px] text-[8px] md:text-[9px] text-neutral-500 mb-0.5 md:mb-1 text-center">
-                    {["D", "L", "M", "M", "J", "V", "S"].map((d) => (
-                      <div key={d} className="py-[2px]">
-                        {d}
-                      </div>
-                    ))}
+                      {["D", "L", "M", "M", "J", "V", "S"].map((d, i) => (
+                        <div key={d + i} className="py-[2px]">
+                          {d}
+                        </div>
+                      ))}
                   </div>
                   <div className="grid grid-cols-7 gap-[2px]">
                     {Array.from({ length: 28 }, (_, i) => {

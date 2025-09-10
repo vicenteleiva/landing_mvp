@@ -8,8 +8,8 @@ import MetaPixel from "@/components/analytics/MetaPixel";
 import FbqPageViewTracker from "@/components/analytics/FbqPageViewTracker";
 
 export const metadata: Metadata = {
-  title: "Broky - Sell & Rent Properties Without Humans",
-  description: "Sell & Rent Properties Without Humans",
+  title: "Broky",
+  description: "Encuentra tu propiedad ideal en minutos con Broky, el asistente inmobiliario impulsado por IA.",
 };
 
 export default function RootLayout({

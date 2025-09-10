@@ -15,13 +15,11 @@ const nextConfig: NextConfig = {
         hostname: '**',
       },
     ],
-  },
-  // Configuración para GitHub Pages
-  output: 'export',
-  basePath: '/ai-property-finder',
-  images: {
     unoptimized: true,
   },
+  // Configuración para Railway
+  output: 'standalone',
+  // basePath eliminado para desarrollo local
   turbopack: {
     rules: {
       "*.{jsx,tsx}": {
