@@ -16,8 +16,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Habilitar modo standalone para Docker
-  output: 'standalone',
+  // Configuración para GitHub Pages
+  output: 'export',
+  basePath: '/ai-property-finder',
+  images: {
+    unoptimized: true,
+  },
   turbopack: {
     rules: {
       "*.{jsx,tsx}": {
