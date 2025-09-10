@@ -176,9 +176,9 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     const okName = name.trim().length >= 2;
     const okEmail = /.+@.+\..+/.test(email);
     const okPhone = phone.trim().replace(/\D/g, "").length >= 8;
-    // Razón opcional: no bloquea el envío
-    return okName && okEmail && okPhone;
-  }, [name, email, phone]);
+    const okReason = reason.trim().length >= 1;
+    return okName && okEmail && okPhone && okReason;
+  }, [name, email, phone, reason]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,9 +196,11 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         try { const j = await res.json(); detail = j?.error || j?.message || "" } catch {}
         throw new Error(detail || "Error guardando");
       }
-      // Update URL to reflect waitlist submission while staying on the same UI
+      // Update URL to reflect waitlist submission without triggering navigation
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
-      router.replace(`/chat/waitlist${qParam}`);
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(null, '', `/chat/waitlist${qParam}`);
+      }
 
       // Track form submission AFTER URL change so it reflects on Supabase
       trackForm({
@@ -239,19 +241,19 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     <form onSubmit={submit} className="space-y-2 md:space-y-3">
       <div className="grid grid-cols-1 gap-1.5">
         <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
-        <input id="name" value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
+        <input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
         <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="email">Email</label>
-        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
+        <input id="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
         <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
-        <input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
+        <input id="phone" required inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
       </div>
       <div className="grid grid-cols-1 gap-1.5">
         <label className="text-[10.2px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
-        <textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 min-h-[54px] md:min-h-[72px] text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
+        <textarea id="reason" required value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 rounded-lg px-3 py-1.5 md:py-2 min-h-[54px] md:min-h-[72px] text-[14px] md:text-[16px] focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
         <div className="text-right text-[10px] md:text-xs text-neutral-500">{reason.length}/400</div>
       </div>
 
