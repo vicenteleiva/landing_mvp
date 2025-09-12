@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { name, email, phone, reason } = body ?? {};
+  const { name, email, phone, reason, property_details } = body ?? {};
   if (!name || !email || !phone) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const supabase = createClient(url, key, { auth: { persistSession: false } });
 
   const attempts: Array<Record<string, unknown>> = [
-    { name, email, phone, reason: reason ?? null },
+    { name, email, phone, reason: reason ?? null, property_details: property_details ?? null },
     { name, email, phone },
     { name, email },
   ];

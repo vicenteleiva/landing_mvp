@@ -165,7 +165,7 @@ const HeroSection = () => {
           {/* Subtítulo */}
           <div className="space-y-4">
             <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-              Escribe lo que buscas y deja que Broky haga el resto.
+              Escribe aquí lo que buscas y deja que Broky haga el resto.
             </p>
           </div>
         </div>
