@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
   },
   basePath: process.env.GITHUB_ACTIONS ? '/ai-property-finder' : '',
   // Configuración para Railway
-  output: 'standalone',
   // basePath eliminado para desarrollo local
   turbopack: {
     rules: {
