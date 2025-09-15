@@ -135,9 +135,8 @@ function ChatPageContent() {
             <div className="flex-1 p-4 md:p-5 space-y-1.5 md:space-y-2 overflow-hidden flex flex-col">
               <p className="text-[14px] md:text-[15px] leading-relaxed">Broky está en construcción 🚀</p>
               <p className="text-[14px] md:text-[15px] leading-relaxed">Pero no queremos dejarte esperando.</p>
-              <p className="text-[14px] md:text-[15px] leading-relaxed">Regístrate y describe la propiedad que buscas.</p>
-              <p className="text-[14px] md:text-[15px] leading-relaxed">En menos de 72 horas te contactaremos con las mejores opciones de todo el mercado, elegidas para ti.</p>
-
+              <p className="text-[14px] md:text-[15px] leading-relaxed">Regístrate y en menos de 72 horas te enviaremos las propiedades que mejor se ajustan a tu búsqueda.</p>
+              <div className="h-px bg-neutral-300 md:bg-neutral-200/80 my-3" />
               <div className="flex-1 flex flex-col">
                 <WaitlistForm initialMessage={initial} />
               </div>
@@ -293,7 +292,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         <>
           <div className="flex-1 space-y-2 md:space-y-3">
             <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[11px] md:text-[13px] font-medium" htmlFor="property_details">Escribe todas las características de la propiedad que buscas</label>
+              <label className="text-[12px] md:text-[13x] font-medium" htmlFor="property_details">Escribe las características de la propiedad que buscas</label>
               <textarea
                 id="property_details"
                 required
@@ -306,7 +305,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
               <div className="text-right text-[10px] md:text-xs text-neutral-500">{propertyDetails.length}/400</div>
             </div>
             <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[11px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
+              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
               <textarea id="reason" required value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 min-h-[72px] md:min-h-[90px] text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
               <div className="text-right text-[10px] md:text-xs text-neutral-500">{reason.length}/400</div>
             </div>
@@ -337,15 +336,15 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
               </button>
             </div>
             <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[11px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
+              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
               <input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
             </div>
             <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[11px] md:text-[13px] font-medium" htmlFor="email">Email</label>
+              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="email">Email</label>
               <input id="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
             </div>
             <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[11px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
+              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
               <input id="phone" required inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
             </div>
 
