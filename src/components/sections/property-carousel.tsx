@@ -21,7 +21,7 @@ const ITEMS: Item[] = [
     location: "Parque Arauco",
     imageAlt: "Departamento con áreas verdes",
     imageSrc:
-      "https://images.unsplash.com/photo-1505691723518-36a8e2ef6970?auto=format&fit=crop&w=1600&q=60",
+      "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=1600&q=60",
   },
   {
     price: "UF 27.990",
