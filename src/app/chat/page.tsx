@@ -171,6 +171,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   const [step, setStep] = useState<1 | 2>(1);
   const [step1Logged, setStep1Logged] = useState(false);
   const [step2Logged, setStep2Logged] = useState(false);
+  const metaLeadFiredRef = useRef(false); // META LEAD WAITLIST
 
   const { step1Valid, step2Valid, valid } = useMemo(() => {
     const okName = name.trim().length >= 2;
@@ -244,6 +245,11 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         let detail = "";
         try { const j = await res.json(); detail = j?.error || j?.message || "" } catch {}
         throw new Error(detail || "Error guardando");
+      }
+
+      if (!metaLeadFiredRef.current && typeof window !== 'undefined' && typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', { content_name: 'waitlist' }); // META LEAD WAITLIST
+        metaLeadFiredRef.current = true; // META LEAD WAITLIST
       }
       // Update URL to reflect waitlist submission without triggering navigation
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
