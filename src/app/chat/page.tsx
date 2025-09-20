@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { trackForm, trackClick, trackChat } from "@/lib/analytics";
+import { delayNavigation, safeFbqTrack } from "@/lib/meta";
 
 const ACCENT = "#8C0529";
 
@@ -247,9 +248,10 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         throw new Error(detail || "Error guardando");
       }
 
-      if (!metaLeadFiredRef.current && typeof window !== 'undefined' && typeof window.fbq === 'function') {
-        window.fbq('track', 'Lead', { content_name: 'waitlist' }); // META LEAD WAITLIST
+      if (!metaLeadFiredRef.current) {
+        await safeFbqTrack('Lead', { content_name: 'waitlist' }, { dedupeKey: 'lead:waitlist', maxWaitMs: 4000 }); // META LEAD WAITLIST
         metaLeadFiredRef.current = true; // META LEAD WAITLIST
+        await delayNavigation(300);
       }
       // Update URL to reflect waitlist submission without triggering navigation
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
@@ -370,17 +372,22 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
 function ChatInput({ mountDelayMs = 0 }: { mountDelayMs?: number }) {
   const [val, setVal] = useState("");
   const [mounted, setMounted] = useState(mountDelayMs === 0);
+  const contactTrackedRef = useRef(false);
   useEffect(() => {
     if (mountDelayMs === 0) return;
     const t = setTimeout(() => setMounted(true), mountDelayMs);
     return () => clearTimeout(t);
   }, [mountDelayMs]);
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const q = val.trim();
     if (q) {
       trackChat({ message: q }).catch(() => {})
       trackClick({ buttonId: 'chat-send', buttonText: 'Enviar' }).catch(() => {})
+      if (!contactTrackedRef.current) {
+        await safeFbqTrack('Contact', { content_name: 'chat_start' }, { dedupeKey: 'contact:chat_start', maxWaitMs: 4000 }); // META CONTACT CHAT_START
+        contactTrackedRef.current = true;
+      }
     }
     setVal("");
   };
