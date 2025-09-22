@@ -120,7 +120,7 @@ function ChatPageContent() {
       {/* Waitlist Sheet */}
       {openWaitlist && (
         <div className="fixed inset-0 z-20 bg-neutral-900/25 flex items-center justify-center p-4 md:p-8">
-          <div className="w-full max-w-xl md:max-w-1xl bg-white rounded-2xl md:rounded-3xl shadow-2xl border border-neutral-200 overflow-hidden h-[75svh] md:h-[80vh] flex flex-col opacity-0 animate-[sheetIn_200ms_ease-out_forwards]">
+          <div className="w-full max-w-xl md:max-w-1xl bg-white rounded-2xl md:rounded-3xl shadow-2xl border border-neutral-200 overflow-hidden h-[68svh] md:h-[75vh] flex flex-col opacity-0 animate-[sheetIn_200ms_ease-out_forwards]">
             <div className="px-4 md:px-5 py-2.5 md:py-3 flex items-center justify-between" style={{ background: "linear-gradient(180deg, rgba(140,5,41,0.06), rgba(255,255,255,0))" }}>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-neutral-50 border border-neutral-200 grid place-items-center">
@@ -136,7 +136,7 @@ function ChatPageContent() {
             <div className="flex-1 p-4 md:p-5 space-y-1.5 md:space-y-2 overflow-hidden flex flex-col">
               <p className="text-[14px] md:text-[15px] leading-relaxed">Broky está en construcción 🚀</p>
               <p className="text-[14px] md:text-[15px] leading-relaxed">Pero no queremos dejarte esperando.</p>
-              <p className="text-[14px] md:text-[15px] leading-relaxed">Regístrate y en menos de 72 horas te enviaremos las propiedades que mejor se ajustan a tu búsqueda.</p>
+              <p className="text-[14px] md:text-[15px] leading-relaxed">Regístrate y en menos de 48 horas te llamaremos para mostrarte opciones que calzan con lo que buscas.</p>
               <div className="h-px bg-neutral-300 md:bg-neutral-200/80 my-3" />
               <div className="flex-1 flex flex-col">
                 <WaitlistForm initialMessage={initial} />
@@ -162,85 +162,53 @@ function Dots() {
 function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [propertyDetails, setPropertyDetails] = useState("");
-  const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<1 | 2>(1);
-  const [step1Logged, setStep1Logged] = useState(false);
-  const [step2Logged, setStep2Logged] = useState(false);
+  const [partialLogged, setPartialLogged] = useState(false);
   const metaLeadFiredRef = useRef(false); // META LEAD WAITLIST
 
-  const { step1Valid, step2Valid, valid } = useMemo(() => {
+  const isValid = useMemo(() => {
     const okName = name.trim().length >= 2;
-    const okEmail = /.+@.+\..+/.test(email);
     const okPhone = phone.trim().replace(/\D/g, "").length >= 8;
-    const okPropertyDetails = propertyDetails.trim().length >= 1;
-    const okReason = reason.trim().length >= 1;
-    const step1Valid = okPropertyDetails && okReason;
-    const step2Valid = okName && okEmail && okPhone;
-    return { step1Valid, step2Valid, valid: step1Valid && step2Valid };
-  }, [name, email, phone, propertyDetails, reason]);
+    return okName && okPhone;
+  }, [name, phone]);
 
-  const onContinue = () => {
-    if (loading || !step1Valid) return;
-    trackClick({ buttonId: 'waitlist-continue', buttonText: 'Continuar' }).catch(() => {})
-    // Guarda en Supabase los datos del paso 1
-    trackForm({
-      formId: 'waitlist-step1',
-      fields: { property_details: propertyDetails, reason, initial_message: initialMessage }
-    }).catch(() => {})
-    setStep(2);
-  };
-
-  // Auto-guardado de Paso 1 si el usuario no continúa
+  // Auto-guardado con los campos visibles para mantener analítica histórica
   useEffect(() => {
-    if (step1Logged) return;
-    const pd = propertyDetails.trim();
-    const rs = reason.trim();
-    if (pd.length >= 3 || rs.length >= 3) {
-      const t = setTimeout(() => {
-        trackForm({
-          formId: 'waitlist-step1-auto',
-          fields: { property_details: propertyDetails, reason }
-        }).catch(() => {})
-        setStep1Logged(true);
-      }, 1200);
-      return () => clearTimeout(t);
-    }
-  }, [propertyDetails, reason, step1Logged]);
-
-  // Auto-guardado de Paso 2 (datos parciales) si el usuario escribe pero no envía
-  useEffect(() => {
-    if (step !== 2 || step2Logged) return;
+    if (partialLogged) return;
     const nameOk = name.trim().length > 0;
-    const emailOk = email.trim().length > 0;
     const phoneOk = phone.trim().replace(/\D/g, "").length > 0;
-    if (nameOk || emailOk || phoneOk) {
+    if (nameOk || phoneOk) {
       const t = setTimeout(() => {
         trackForm({
           formId: 'waitlist-step2-auto',
-          fields: { name, email, phone }
+          fields: { name, phone, email: null }
         }).catch(() => {})
-        setStep2Logged(true);
+        setPartialLogged(true);
       }, 1200);
       return () => clearTimeout(t);
     }
-  }, [step, name, email, phone, step2Logged]);
+  }, [name, phone, partialLogged]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!valid || loading) return;
+    if (!isValid || loading) return;
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, reason, property_details: propertyDetails, initial_message: initialMessage }),
+        body: JSON.stringify({
+          name,
+          phone,
+          email: null,
+          reason: null,
+          property_details: null,
+          initial_message: initialMessage,
+        }),
       });
       if (!res.ok) {
         let detail = "";
@@ -253,18 +221,22 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         metaLeadFiredRef.current = true; // META LEAD WAITLIST
         await delayNavigation(300);
       }
-      // Update URL to reflect waitlist submission without triggering navigation
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
       if (typeof window !== 'undefined') {
         window.history.replaceState(null, '', `/chat/waitlist${qParam}`);
       }
 
-      // Track form submission AFTER URL change so it reflects on Supabase
       trackForm({
         formId: 'waitlist',
-        fields: { name, email, phone, reason, property_details: propertyDetails, initial_message: initialMessage }
+        fields: {
+          name,
+          phone,
+          email: null,
+          reason: null,
+          property_details: null,
+          initial_message: initialMessage,
+        }
       }).catch(() => {})
-      // Mostrar tarjeta de agradecimiento en la misma vista
       trackClick({ buttonId: 'waitlist-thanks', buttonText: 'Gracias' }).catch(() => {})
       setDone(true);
     } catch (err: any) {
@@ -296,75 +268,42 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
 
   return (
     <form onSubmit={submit} className="flex flex-col flex-1">
-      {step === 1 ? (
-        <>
-          <div className="flex-1 space-y-2 md:space-y-3">
-            <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[12px] md:text-[13x] font-medium" htmlFor="property_details">Escribe las características de la propiedad que buscas</label>
-              <textarea
-                id="property_details"
-                required
-                value={propertyDetails}
-                onChange={(e) => setPropertyDetails(e.target.value)}
-                className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 min-h-[72px] md:min-h-[90px] text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]"
-                maxLength={400}
-                placeholder="Ej.: tipo, ubicación, presupuesto, dormitorios, baños, estacionamientos, metros, etc."
-              />
-              <div className="text-right text-[10px] md:text-xs text-neutral-500">{propertyDetails.length}/400</div>
-            </div>
-            <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="reason">¿Qué te interesó de Broky?</label>
-              <textarea id="reason" required value={reason} onChange={(e) => setReason(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 min-h-[72px] md:min-h-[90px] text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" maxLength={400} placeholder="Cuéntanos brevemente..." />
-              <div className="text-right text-[10px] md:text-xs text-neutral-500">{reason.length}/400</div>
-            </div>
-            {error && <p className="text-[12px] md:text-sm text-red-600">{error}</p>}
-          </div>
-          <div className="mt-auto pt-2">
-            <button type="button" onClick={onContinue} disabled={!step1Valid || loading} className="w-full rounded-xl px-4 py-2.5 text-[15px] md:text-[16px] text-white disabled:opacity-60 shadow-sm" style={{ background: ACCENT }}>
-              Continuar
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex-1 space-y-2 md:space-y-3">
-            <div className="flex items-center justify-between mb-1">
-              <button
-                type="button"
-                onClick={() => {
-                  trackClick({ buttonId: 'waitlist-back', buttonText: 'Volver', meta: { from: 2, to: 1 } }).catch(() => {})
-                  // También guardamos snapshot de los datos al volver
-                  trackForm({ formId: 'waitlist-back', fields: { name, email, phone, property_details: propertyDetails, reason } }).catch(() => {})
-                  setStep(1)
-                }}
-                className="inline-flex items-center gap-1.5 text-[13px] md:text-sm text-neutral-600 hover:text-neutral-800"
-              >
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                Volver
-              </button>
-            </div>
-            <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
-              <input id="name" required value={name} onChange={(e) => setName(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="Tu nombre" />
-            </div>
-            <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="email">Email</label>
-              <input id="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="tu@email.com" />
-            </div>
-            <div className="grid grid-cols-1 gap-1.5">
-              <label className="text-[12px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
-              <input id="phone" required inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]" placeholder="+56 9 1234 5678" />
-            </div>
-
-            {error && <p className="text-[12px] md:text-sm text-red-600">{error}</p>}
-          </div>
-          <div className="mt-auto pt-2">
-            <button type="submit" disabled={!valid || loading} className="w-full rounded-xl px-4 py-2.5 text-[15px] md:text-[16px] text-white disabled:opacity-60 shadow-sm" style={{ background: ACCENT }}>
-              {loading ? "Enviando..." : "Unirme a la lista"}
-            </button>
-          </div>
-        </>
-      )}
+      <div className="flex-1 space-y-2 md:space-y-3">
+        <div className="grid grid-cols-1 gap-1.5">
+          <label className="text-[12px] md:text-[13px] font-medium" htmlFor="name">Nombre</label>
+          <input
+            id="name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]"
+            placeholder="Tu nombre"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-1.5">
+          <label className="text-[12px] md:text-[13px] font-medium" htmlFor="phone">Celular</label>
+          <input
+            id="phone"
+            required
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="border border-neutral-200 bg-neutral-50 rounded-xl px-3.5 py-2 md:py-2.5 text-[15px] md:text-[16px] placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(140,5,41,0.20)]"
+            placeholder="+56 9 1234 5678"
+          />
+        </div>
+        {error && <p className="text-[12px] md:text-sm text-red-600">{error}</p>}
+      </div>
+      <div className="mt-auto pt-2">
+        <button
+          type="submit"
+          disabled={!isValid || loading}
+          className="w-full rounded-xl px-4 py-2.5 text-[15px] md:text-[16px] text-white disabled:opacity-60 shadow-sm"
+          style={{ background: ACCENT }}
+        >
+          {loading ? "Enviando..." : "Quiero mi propiedad ideal"}
+        </button>
+      </div>
     </form>
   );
 }

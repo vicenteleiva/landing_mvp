@@ -14,8 +14,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { name, email, phone, reason, property_details } = body ?? {};
-  if (!name || !email || !phone) {
+  const rawName = typeof body?.name === "string" ? body.name.trim() : "";
+  const rawPhone = typeof body?.phone === "string" ? body.phone.trim() : "";
+  const rawEmail = typeof body?.email === "string" ? body.email.trim() : "";
+  const rawReason = typeof body?.reason === "string" ? body.reason.trim() : "";
+  const rawPropertyDetails = typeof body?.property_details === "string" ? body.property_details.trim() : "";
+
+  if (!rawName || !rawPhone) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
   if (!url || !(serviceKey || anonKey)) {
@@ -25,10 +30,18 @@ export async function POST(req: Request) {
   const key = serviceKey || (anonKey as string);
   const supabase = createClient(url, key, { auth: { persistSession: false } });
 
+  const payload = {
+    name: rawName,
+    phone: rawPhone,
+    email: rawEmail ? rawEmail : null,
+    reason: rawReason ? rawReason : null,
+    property_details: rawPropertyDetails ? rawPropertyDetails : null,
+  };
+
   const attempts: Array<Record<string, unknown>> = [
-    { name, email, phone, reason: reason ?? null, property_details: property_details ?? null },
-    { name, email, phone },
-    { name, email },
+    payload,
+    { name: payload.name, phone: payload.phone, email: payload.email },
+    { name: payload.name, phone: payload.phone },
   ];
 
   let lastError: any = null;
