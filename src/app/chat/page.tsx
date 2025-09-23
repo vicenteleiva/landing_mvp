@@ -126,7 +126,7 @@ function ChatPageContent() {
                 <div className="w-6 h-6 rounded-full bg-neutral-50 border border-neutral-200 grid place-items-center">
                   <BrokyMark className="w-3.5 h-3.5" />
                 </div>
-                <p className="font-semibold text-neutral-900 text-[17px] md:text-xl">Lista de espera</p>
+                <p className="font-semibold text-neutral-900 text-[17px] md:text-xl">Accede a la experiencia Broky</p>
               </div>
               <div className="flex items-center gap-3">
                 <Link href="/contacto?src=chat" onClick={() => trackClick({ buttonId: 'waitlist-contacto', buttonText: 'Contacto' }).catch(() => {})} className="text-[13px] md:text-sm text-neutral-700 hover:underline">Contacto</Link>
