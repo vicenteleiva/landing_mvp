@@ -34,7 +34,7 @@ function baseFields() {
   })()
 
   return {
-    page,
+    page: `${page}_mvp`,
     path:
       typeof window !== "undefined"
         ? window.location.pathname + window.location.search

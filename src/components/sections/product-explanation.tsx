@@ -9,6 +9,7 @@ import {
   Calendar as CalendarIcon,
   CheckCircle2,
   ArrowRight,
+  Handshake,
 } from "lucide-react";
 
 type Role = "user" | "broky";
@@ -227,6 +228,19 @@ function Bullet({ text }: { text: React.ReactNode }) {
 const FRAME =
   "w-[88%] max-w-[520px] mx-auto bg-white rounded-2xl border border-neutral-200 p-3 shadow-sm flex flex-col gap-2 relative min-h-[220px] md:min-h-[240px] lg:min-h-[260px] overflow-hidden";
 
+const SUPPORT_MESSAGES: { role: Role; text: string }[] = [
+  { role: "user", text: "La propiedad que visité no me convenció 😕" },
+  {
+    role: "broky",
+    text: "Sin problema, seguimos buscando por ti y alistamos nuevas visitas que se ajusten mejor.",
+  },
+  {
+    role: "broky",
+    text: "Ya dejamos todo documentado con el corredor para que se cumpla lo acordado sin sorpresas.",
+  },
+  { role: "user", text: "Gracias, me siento acompañado en todo el proceso 🙌" },
+];
+
 /* ============ Principal ============ */
 const ProductExplanation = () => {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
@@ -351,34 +365,68 @@ const ProductExplanation = () => {
     return () => calTimers.clearAll();
   }, [visibleCards]);
 
+  /* ----- Animación 5 (Support) LOOP ----- */
+  const [supportStep, setSupportStep] = useState(-1);
+  const [supportCycleKey, setSupportCycleKey] = useState(0);
+  const supportTimers = useTimeoutBag();
+
+  useEffect(() => {
+    if (!visibleCards.has(4)) return;
+    supportTimers.clearAll();
+
+    const cycle = () => {
+      setSupportCycleKey((k) => k + 1);
+      setSupportStep(-1);
+
+      const baseDelay = 180;
+      const gap = 620;
+      SUPPORT_MESSAGES.forEach((_, idx) => {
+        supportTimers.schedule(baseDelay + idx * gap, () => setSupportStep(idx));
+      });
+      const pauseAfterLast = 2200;
+      const totalDuration = baseDelay + gap * (SUPPORT_MESSAGES.length - 1) + pauseAfterLast;
+      supportTimers.schedule(totalDuration, cycle);
+    };
+
+    cycle();
+    return () => supportTimers.clearAll();
+  }, [visibleCards]);
+
   const cards = [
     {
       number: "01",
-      title: "Cuéntale a Broky qué buscas",
+      title: "Cuéntanos qué buscas",
       icon: Search,
       visual: "search",
-      desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $650.000 máx, admite mascotas").',
+      desc: 'Escribe tu requerimiento lo más detallado posible (tipo, comuna, presupuesto, fechas, mascotas, estacionamiento, etc.).',
     },
     {
       number: "02",
       title: "Te mostramos las mejores opciones",
       icon: CheckSquare,
       visual: "results",
-      desc: "En segundos recibes propiedades que realmente calzan contigo. Olvídate de filtrar en decenas de portales.",
+      desc: "En menos de 48 horas recibes 3–5 propiedades que realmente calzan contigo. Nosotros buscamos en todo el mercado para ti.",
     },
     {
       number: "03",
-      title: "Resuelve todas tus dudas al momento",
+      title: "Aclaramos tus dudas por ti",
       icon: FileText,
       visual: "document",
-      desc: "Broky te entrega la info completa: gastos comunes, requisitos, ubicación exacta y más. Sin esperar respuestas.",
+      desc: "Consultamos a los corredores y te entregamos info confirmada: gastos comunes, requisitos, políticas de mascotas, disponibilidad y más.",
     },
     {
       number: "04",
-      title: "Agenda visitas de inmediato",
+      title: "Agendamos tu visita de inmediato",
       icon: CalendarIcon,
       visual: "calendar",
-      desc: "Elige horarios y confirma en un clic. Broky coordina por ti, sin idas y vueltas.",
+      desc: "Elige horario y coordinamos directamente con el corredor. Te llega la confirmación y el contacto para la visita.",
+    },
+    {
+      number: "05",
+      title: "Te acompañamos hasta el final",
+      icon: Handshake,
+      visual: "support",
+      desc: "Si la propiedad que visitas no te convence, seguimos buscando por ti. Y si te interesa una, te acompañamos durante todo el proceso, asegurando que el corredor cumpla con lo acordado y que todo sea transparente, seguro y sin sorpresas.",
     },
   ] as const;
 
@@ -666,6 +714,29 @@ const ProductExplanation = () => {
           </div>
         );
 
+      /* —— CARD 5 —— (acompañamiento) */
+      case "support": {
+        return (
+          <div className={`${FRAME} h-[220px] md:h-[240px] lg:h-[260px]`}>
+            <div className="flex h-full flex-col justify-end gap-1.5 md:gap-2 px-0.5 md:px-1">
+              {SUPPORT_MESSAGES.map((msg, idx) => {
+                if (supportStep < idx) return null;
+                return (
+                  <ChatBubble
+                    key={`${msg.role}-${idx}-${supportCycleKey}`}
+                    role={msg.role}
+                    incoming
+                    extraClass="leading-tight md:leading-relaxed"
+                  >
+                    {msg.text}
+                  </ChatBubble>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
       default:
         return null;
     }
@@ -677,47 +748,26 @@ const ProductExplanation = () => {
         {/* Título pequeño centrado: ¿Cómo funciona? */}
         <div className="flex items-center justify-center gap-2 mb-8">
           <span
-            className="inline-block w-3 h-3 rounded-full"
+            className="inline-block w-4 h-4 rounded-full"
             style={{ background: ACCENT }}
             aria-hidden
           />
-          <p className="text-neutral-900 text-lg font-medium">¿Cómo funciona?</p>
+          <p className="text-neutral-900 text-3xl font-bold">
+            <span
+              className="px-1"
+              style={{
+                boxShadow: "inset 0 -0.99em 0 #FDE68A",
+                boxDecorationBreak: "clone",
+                WebkitBoxDecorationBreak: "clone",
+              }}
+            >
+              ¿Cómo funciona?
+            </span>
+          </p>
         </div>
 
         <div className="space-y-10">
-          {[0, 1, 2, 3].map((index) => {
-            const defs = [
-              {
-                number: "01",
-                title: "Cuéntale a Broky qué buscas",
-                desc: 'Solo escribe el tipo de propiedad que necesitas (ej: "Departamento 2D en Providencia, $650.000 máx, admite mascotas").',
-                icon: Search,
-                visual: "search",
-              },
-              {
-                number: "02",
-                title: "Te mostramos las mejores opciones",
-                desc: "En segundos recibes propiedades que realmente calzan contigo. Olvídate de filtrar en decenas de portales.",
-                icon: CheckSquare,
-                visual: "results",
-              },
-              {
-                number: "03",
-                title: "Resuelve todas tus dudas al momento",
-                desc: "Broky te entrega la info completa: gastos comunes, requisitos, ubicación exacta y más. Sin esperar respuestas.",
-                icon: FileText,
-                visual: "document",
-              },
-              {
-                number: "04",
-                title: "Agenda visitas de inmediato",
-                desc: "Elige horarios y confirma en un clic. Broky coordina por ti, sin idas y vueltas.",
-                icon: CalendarIcon,
-                visual: "calendar",
-              },
-            ] as const;
-
-            const item = defs[index];
+          {cards.map((item, index) => {
             const isEven = index % 2 === 0;
             const isVisible = visibleCards.has(index);
 

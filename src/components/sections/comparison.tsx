@@ -8,23 +8,23 @@ export const ComparisonSection = () => {
     {
       left:
         "Entras a varios portales y pierdes horas abriendo y comparando páginas.",
-      right: "Escribes lo que buscas en un chat simple y listo.",
+      right: "Nos cuentas lo que buscas y nosotros hacemos la búsqueda completa por ti.",
     },
     {
       left:
         "Revisas decenas de anuncios y la información siempre es confusa o incompleta.",
       right:
-        "Recibes opciones claras en minutos con precio, gastos y requisitos definidos.",
+        "Te enviamos las propiedades que realmente calzan con tus requisitos en tiempo récord.",
     },
     {
       left:
         "Contactas corredores o dueños y pasas días esperando respuestas para resolver tus dudas.",
-      right: "Aclaras tus dudas al instante en un solo lugar.",
+      right: "Revisamos todo con los corredores y te aclaramos cada detalle.",
     },
     {
       left:
         "Intentas coordinar visitas y terminas en un proceso lento y lleno de idas y vueltas.",
-      right: "Agendas tu visita en un clic y Broky se encarga del resto.",
+      right: "Coordinamos las visitas por ti y te acompañamos hasta cerrar el trato.",
     },
   ];
 
@@ -53,10 +53,21 @@ export const ComparisonSection = () => {
         {/* Título centrado (como lo querías) */}
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-neutral-900 mb-3">
-            La mejor forma de encontrar la propiedad que sueñas
+            La{" "}
+            <span
+              className="px-1"
+              style={{
+                boxShadow: "inset 0 -0.99em 0 #FDE68A",
+                boxDecorationBreak: "clone",
+                WebkitBoxDecorationBreak: "clone",
+              }}
+            >
+              mejor forma
+            </span>{" "}
+            de encontrar la propiedad que sueñas
           </h2>
           <p className="text-base text-neutral-600">
-            Dos caminos, un resultado. Con Broky llegas antes.
+            Deja que nosotros hagamos la parte difícil.
           </p>
         </div>
 
@@ -76,7 +87,7 @@ export const ComparisonSection = () => {
             </div>
             <div className="flex items-center gap-3 justify-end">
               <span className="inline-flex items-center rounded-full bg-green-50 text-green-800 border border-green-100 px-4 py-2 text-sm font-medium">
-                Con Broky
+                Con nosotros
               </span>
               <div className="h-px flex-1 bg-green-200" />
             </div>
@@ -98,7 +109,7 @@ export const ComparisonSection = () => {
                 startAnim ? "animate-[headlineRight_420ms_ease-out_forwards]" : "",
               ].join(" ")}
             >
-              Minutos para encontrar, resolver y agendar seguro
+              Te buscamos las mejores opciones y coordinamos por ti
             </h3>
           </div>
         </div>
@@ -205,7 +216,7 @@ export const ComparisonSection = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="h-px flex-1 bg-green-200" />
-              <span className="inline-flex items-center rounded-full bg-green-50 text-green-800 border border-green-100 px-4 py-2 text-sm font-medium">Con Broky</span>
+              <span className="inline-flex items-center rounded-full bg-green-50 text-green-800 border border-green-100 px-4 py-2 text-sm font-medium">Con nosotros</span>
               <div className="h-px flex-1 bg-green-200" />
             </div>
             <h3
@@ -214,7 +225,7 @@ export const ComparisonSection = () => {
                 startAnim ? "animate-[headlineRight_420ms_ease-out_forwards]" : "",
               ].join(" ")}
             >
-              Minutos para encontrar, resolver y agendar seguro
+              Te buscamos las mejores opciones y coordinamos por ti
             </h3>
             <div className="space-y-3">
               {pairs.map((p, i) => (
@@ -246,7 +257,7 @@ export const ComparisonSection = () => {
           >
             Probar Broky ahora
           </button>
-          <p className="text-neutral-600">Simple y seguro</p>
+          <p className="text-neutral-600">Simple, seguro y gratis</p>
         </div>
       </div>
 
