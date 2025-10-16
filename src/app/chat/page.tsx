@@ -167,7 +167,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [partialLogged, setPartialLogged] = useState(false);
-  const metaLeadFiredRef = useRef(false); // META LEAD WAITLIST
+  const metaContactFiredRef = useRef(false); // META CONTACT WAITLIST
 
   const isValid = useMemo(() => {
     const okName = name.trim().length >= 2;
@@ -216,9 +216,9 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
         throw new Error(detail || "Error guardando");
       }
 
-      if (!metaLeadFiredRef.current) {
-        await safeFbqTrack('Lead', { content_name: 'waitlist' }, { dedupeKey: 'lead:waitlist', maxWaitMs: 4000 }); // META LEAD WAITLIST
-        metaLeadFiredRef.current = true; // META LEAD WAITLIST
+      if (!metaContactFiredRef.current) {
+        await safeFbqTrack('contact', { content_name: 'waitlist' }, { dedupeKey: 'contact:waitlist', maxWaitMs: 4000 }); // META CONTACT WAITLIST
+        metaContactFiredRef.current = true; // META CONTACT WAITLIST
         await delayNavigation(300);
       }
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
@@ -324,7 +324,7 @@ function ChatInput({ mountDelayMs = 0 }: { mountDelayMs?: number }) {
       trackChat({ message: q }).catch(() => {})
       trackClick({ buttonId: 'chat-send', buttonText: 'Enviar' }).catch(() => {})
       if (!contactTrackedRef.current) {
-        await safeFbqTrack('Contact', { content_name: 'chat_start' }, { dedupeKey: 'contact:chat_start', maxWaitMs: 4000 }); // META CONTACT CHAT_START
+        await safeFbqTrack('chat', { content_name: 'chat_start' }, { dedupeKey: 'chat:chat_start', maxWaitMs: 4000 }); // META CHAT CHAT_START
         contactTrackedRef.current = true;
       }
     }
