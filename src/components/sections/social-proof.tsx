@@ -52,8 +52,7 @@ const SocialProof = () => {
             </span>
           </h2>
           <p className="text-sm md:text-base text-neutral-600 max-w-2xl">
-            Acompañamos a cada persona durante todo el proceso: desde el primer mensaje hasta firmar el contrato
-            correcto.
+            Queremos que tu experienca de arrendar o comprar una propiedad sea la mejor posible.
           </p>
         </div>
 
