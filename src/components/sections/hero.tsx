@@ -3,6 +3,11 @@
 import { ArrowUp } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { trackChat, trackClick, trackForm } from "@/lib/analytics";
+import { safeFbqTrack } from "@/lib/meta";
+import {
+  createMetaEventId,
+  getMetaBrowserIdentifiers,
+} from "@/lib/meta/client";
 
 const ACCENT = "#8C0529";
 
@@ -120,7 +125,12 @@ const HeroSection = () => {
     setErrorMessage(null);
     trackClick({ buttonId: "hero-contact-submit", buttonText: "Enviar contacto" }).catch(() => {});
     try {
-      await trackForm({
+      const eventId = createMetaEventId("landing-lead");
+      const eventTime = Math.floor(Date.now() / 1000);
+      const { fbp, fbc } = getMetaBrowserIdentifiers();
+      const eventSourceUrl =
+        typeof window !== "undefined" ? window.location.href : undefined;
+      const result = await trackForm({
         formId: "hero-contact",
         fields: {
           query: searchQuery,
@@ -128,6 +138,39 @@ const HeroSection = () => {
           phone: trimmedPhone,
         },
       });
+      if (result?.status && result.status >= 300) {
+        throw new Error("Failed to record form submission");
+      }
+      console.log("[FLOW][LANDING] fetch /api/meta/landing", {
+        eventId,
+        hasFbp: Boolean(fbp),
+        hasFbc: Boolean(fbc),
+      });
+      try {
+        const res = await fetch("/api/meta/landing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventId,
+            eventTime,
+            phone: trimmedPhone,
+            searchQuery,
+            fbp,
+            fbc,
+            eventSourceUrl,
+          }),
+        });
+        if (!res.ok) {
+          console.warn("[FLOW][LANDING] fetch failed", { status: res.status });
+        }
+      } catch (error) {
+        console.warn("[FLOW][LANDING] fetch error", error);
+      }
+      await safeFbqTrack(
+        "Lead",
+        { content_name: "landing_contact" },
+        { dedupeKey: "Lead:landing_contact", maxWaitMs: 4000, eventId },
+      );
       setStep("done");
       setContactName("");
       setContactPhone("");

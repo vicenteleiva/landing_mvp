@@ -5,7 +5,7 @@ const firedEvents = new Set<string>();
 export async function safeFbqTrack(
   event: string,
   params: Record<string, any> = {},
-  opts: { dedupeKey?: string; maxWaitMs?: number } = {}
+  opts: { dedupeKey?: string; maxWaitMs?: number; eventId?: string } = {}
 ) {
   const key = opts.dedupeKey ?? `${event}:${JSON.stringify(params)}`;
   if (firedEvents.has(key)) return;
@@ -27,7 +27,11 @@ export async function safeFbqTrack(
   }
 
   try {
-    (window as any).fbq('track', event, params);
+    const args: any[] = ['track', event, params];
+    if (opts.eventId) {
+      args.push({ eventID: opts.eventId });
+    }
+    (window as any).fbq(...args);
     firedEvents.add(key);
     console.log(`[META] track ${event}`, params);
   } catch (error) {

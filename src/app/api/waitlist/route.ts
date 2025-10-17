@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
+import { sendMetaConversionEvent } from "@/lib/meta/conversions";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL as string | undefined;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string | undefined;
@@ -54,6 +56,85 @@ export async function POST(req: Request) {
     lastError = error;
   }
 
+  const headers = Object.fromEntries(req.headers.entries());
+  const forwarded = headers["x-forwarded-for"];
+  const clientIp = forwarded ? forwarded.split(",")[0]?.trim() : null;
+  const userAgent = headers["user-agent"] ?? null;
+  const eventSourceUrl = headers["referer"] ?? undefined;
+
+  const conversionEventId =
+    typeof body?.conversionEventId === "string" ? body.conversionEventId : undefined;
+  const fbp = typeof body?.fbp === "string" ? body.fbp : undefined;
+  const fbc = typeof body?.fbc === "string" ? body.fbc : undefined;
+
+  const hashedPhone = hashPhone(rawPhone);
+  const hashedEmail = hashEmail(rawEmail);
+  const eventTime =
+    typeof body?.eventTime === "number"
+      ? Math.floor(body.eventTime)
+      : undefined;
+
+  if (!lastError) {
+    try {
+      console.log("[FLOW][WAITLIST] calling CAPI", {
+        event_id: conversionEventId,
+        hasEmail: Boolean(hashedEmail),
+        hasPhone: Boolean(hashedPhone),
+      });
+      const result = await sendMetaConversionEvent({
+        event_name: "Lead",
+        event_id: conversionEventId,
+        event_time: eventTime,
+        event_source_url: typeof eventSourceUrl === "string" ? eventSourceUrl : undefined,
+        user_data: {
+          ph: hashedPhone ? [hashedPhone] : undefined,
+          em: hashedEmail ? [hashedEmail] : undefined,
+          client_ip_address: clientIp ?? undefined,
+          client_user_agent: userAgent ?? undefined,
+          fbp,
+          fbc,
+        },
+        custom_data: {
+          lead_type: "waitlist",
+          search_string:
+            typeof body?.initial_message === "string"
+              ? body.initial_message.slice(0, 200)
+              : undefined,
+        },
+      });
+      console.log("[META][CAPI] Lead success", {
+        status: result.status,
+        event_id: conversionEventId,
+      });
+    } catch (error) {
+      console.error("[FLOW][WAITLIST] CAPI error", error);
+      console.error("[META][CAPI] Waitlist conversion dispatch failed", error);
+    }
+  }
+
   // Always respond 200 for a smoother UX; include error info if any.
-  return NextResponse.json({ ok: true, warning: lastError ? { message: lastError.message, code: lastError.code } : null });
+  return NextResponse.json({
+    ok: true,
+    warning: lastError ? { message: lastError.message, code: lastError.code } : null,
+  });
+}
+
+type Hashable = string | null | undefined;
+
+function hashEmail(value: Hashable) {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return undefined;
+  return sha256(normalized);
+}
+
+function hashPhone(value: Hashable) {
+  if (!value) return undefined;
+  const normalized = value.replace(/\D/g, "");
+  if (!normalized) return undefined;
+  return sha256(normalized);
+}
+
+function sha256(value: string) {
+  return crypto.createHash("sha256").update(value).digest("hex");
 }

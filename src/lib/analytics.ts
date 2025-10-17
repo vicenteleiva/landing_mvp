@@ -99,7 +99,7 @@ export async function trackForm(params: {
 }) {
   const session_id = getSessionId()
   const base = baseFields()
-  await supabase.from("landing_events").insert({
+  const { error, status } = await supabase.from("landing_events").insert({
     event_type: "form",
     session_id,
     ...base,
@@ -107,4 +107,8 @@ export async function trackForm(params: {
     fields: params.fields,
     meta: params.meta ?? null,
   })
+  if (error) {
+    throw error
+  }
+  return { status }
 }

@@ -5,8 +5,47 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { trackForm, trackClick, trackChat } from "@/lib/analytics";
 import { delayNavigation, safeFbqTrack } from "@/lib/meta";
+import {
+  createMetaEventId,
+  getMetaBrowserIdentifiers,
+} from "@/lib/meta/client";
 
 const ACCENT = "#8C0529";
+
+async function sendChatConversion(payload: {
+  eventId: string;
+  searchQuery: string;
+  eventTime: number;
+  fbp?: string;
+  fbc?: string;
+}) {
+  const body = {
+    eventName: "Contact",
+    eventId: payload.eventId,
+    eventTime: payload.eventTime,
+    searchQuery: payload.searchQuery,
+    fbp: payload.fbp,
+    fbc: payload.fbc,
+  };
+  console.log("[FLOW][CHAT] fetch /api/meta/conversions", {
+    eventId: payload.eventId,
+    hasSearch: body.searchQuery.length > 0,
+    hasFbp: Boolean(payload.fbp),
+    hasFbc: Boolean(payload.fbc),
+  });
+  try {
+    const res = await fetch("/api/meta/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      console.warn("[FLOW][CHAT] fetch failed", { status: res.status });
+    }
+  } catch (error) {
+    console.warn("[META][CAPI] Failed to send contact conversion", error);
+  }
+}
 
 function BrokyMark({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -167,7 +206,7 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [partialLogged, setPartialLogged] = useState(false);
-  const metaContactFiredRef = useRef(false); // META CONTACT WAITLIST
+  const metaContactFiredRef = useRef(false); // META LEAD WAITLIST
 
   const isValid = useMemo(() => {
     const okName = name.trim().length >= 2;
@@ -197,7 +236,15 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
     if (!isValid || loading) return;
     setLoading(true);
     setError(null);
+    const conversionEventId = createMetaEventId("lead");
+    const eventTime = Math.floor(Date.now() / 1000);
+    const { fbp, fbc } = getMetaBrowserIdentifiers();
     try {
+      console.log("[FLOW][WAITLIST] fetch /api/waitlist", {
+        eventId: conversionEventId,
+        hasFbp: Boolean(fbp),
+        hasFbc: Boolean(fbc),
+      });
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -208,17 +255,22 @@ function WaitlistForm({ initialMessage }: { initialMessage?: string }) {
           reason: null,
           property_details: null,
           initial_message: initialMessage,
+          conversionEventId,
+          eventTime,
+          fbp,
+          fbc,
         }),
       });
       if (!res.ok) {
+        console.warn("[FLOW][WAITLIST] fetch failed", { status: res.status });
         let detail = "";
         try { const j = await res.json(); detail = j?.error || j?.message || "" } catch {}
         throw new Error(detail || "Error guardando");
       }
 
       if (!metaContactFiredRef.current) {
-        await safeFbqTrack('contact', { content_name: 'waitlist' }, { dedupeKey: 'contact:waitlist', maxWaitMs: 4000 }); // META CONTACT WAITLIST
-        metaContactFiredRef.current = true; // META CONTACT WAITLIST
+        await safeFbqTrack('Lead', { content_name: 'waitlist' }, { dedupeKey: 'Lead:waitlist', maxWaitMs: 4000, eventId: conversionEventId }); // META LEAD WAITLIST
+        metaContactFiredRef.current = true; // META LEAD WAITLIST
         await delayNavigation(300);
       }
       const qParam = initialMessage ? `?q=${encodeURIComponent(initialMessage)}` : '';
@@ -324,7 +376,11 @@ function ChatInput({ mountDelayMs = 0 }: { mountDelayMs?: number }) {
       trackChat({ message: q }).catch(() => {})
       trackClick({ buttonId: 'chat-send', buttonText: 'Enviar' }).catch(() => {})
       if (!contactTrackedRef.current) {
-        await safeFbqTrack('chat', { content_name: 'chat_start' }, { dedupeKey: 'chat:chat_start', maxWaitMs: 4000 }); // META CHAT CHAT_START
+        const eventId = createMetaEventId('contact');
+        const eventTime = Math.floor(Date.now() / 1000);
+        const { fbp, fbc } = getMetaBrowserIdentifiers();
+        sendChatConversion({ eventId, searchQuery: q, eventTime, fbp, fbc }).catch(() => {});
+        await safeFbqTrack('Contact', { content_name: 'chat_start' }, { dedupeKey: 'Contact:chat_start', maxWaitMs: 4000, eventId }); // META CONTACT CHAT_START
         contactTrackedRef.current = true;
       }
     }
